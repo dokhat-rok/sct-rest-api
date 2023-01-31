@@ -1,0 +1,4 @@
+initialPriceForBicycle: 40
+initialPriceForScooter: 60
+pricePerMinuteForBicycle: 5
+pricePerMinuteForScooter: 10

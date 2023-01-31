@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-parking1
+      author: Dmitry Krivenko
+      changes:
+        - insert:
+            tableName: parking
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: ДГТУ
+              - column:
+                  name: coordinates
+                  value: 47.236372918786934,39.71263323803597
+              - column:
+                  name: allowed_radius
+                  value: 200
+              - column:
+                  name: type
+                  value: ALL
+
+  - changeSet:
+      id: insert-parking2
+      author: Dmitry Krivenko
+      changes:
+        - insert:
+            tableName: parking
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: ГОРЬКИЙ
+              - column:
+                  name: coordinates
+                  value: 47.22245807938916,39.710144148070555
+              - column:
+                  name: allowed_radius
+                  value: 200
+              - column:
+                  name: type
+                  value: ALL

@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-parking
+      author: Dmitry Krivenko
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: parking
+      changes:
+        - createTable:
+            tableName: parking
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: coordinates
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: allowed_radius
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false

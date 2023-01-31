@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-user-table.yaml
+      relativeToChangeLogFile: true
+  - include:
+      file: db/changelog/changeset/create-parking-table.yaml
+      relativeToChangeLogFile: true
+  - include:
+      file: db/changelog/changeset/create-transport-table.yaml
+      relativeToChangeLogFile: true
+  - include:
+      file: db/changelog/changeset/create-rent-table.yaml
+      relativeToChangeLogFile: true
+  - include:
+      file: db/changelog/changeset/insert-user-data.yaml
+      relativeToChangeLogFile: true
+  - include:
+      file: db/changelog/changeset/insert-parking-data.yaml
+      relativeToChangeLogFile: true
+  - include:
+      file: db/changelog/changeset/insert-transport-data.yaml
+      relativeToChangeLogFile: true

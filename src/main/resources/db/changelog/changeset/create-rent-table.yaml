@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-rent
+      author: Dmitry Krivenko
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: rent
+      changes:
+        - createTable:
+            tableName: rent
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: id_user
+                  type: int
+                  constraints:
+                    foreignKeyName: customer
+                    references: customer(id)
+                    nullable: false
+              - column:
+                  name: id_transport
+                  type: int
+                  constraints:
+                    foreignKeyName: transport
+                    references: transport(id)
+                    nullable: false
+              - column:
+                  name: begin_time_rent
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time_rent
+                  type: timestamp
+              - column:
+                  name: id_begin_parking
+                  type: int
+                  constraints:
+                    foreignKeyName: begin_parking
+                    references: parking(id)
+                    nullable: false
+              - column:
+                  name: id_end_parking
+                  type: int
+                  constraints:
+                    foreignKeyName: end_parking
+                    references: parking(id)
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: int

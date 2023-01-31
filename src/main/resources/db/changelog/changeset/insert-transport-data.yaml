@@ -1,0 +1,129 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-transport1
+      author: Dmitry Krivenko
+      changes:
+        - insert:
+            tableName: transport
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: id_parking
+                  value: 1
+              - column:
+                  name: type
+                  value: BICYCLE
+              - column:
+                  name: identification_number
+                  value: ВЕЛ-1
+              - column:
+                  name: coordinates
+                  value: 47.236372918786934,39.71263323803597
+              - column:
+                  name: condition
+                  value: EXCELLENT
+              - column:
+                  name: status
+                  value: FREE
+
+
+  - changeSet:
+      id: insert-transport2
+      author: Dmitry Krivenko
+      changes:
+        - insert:
+            tableName: transport
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: id_parking
+                  value: 2
+              - column:
+                  name: type
+                  value: BICYCLE
+              - column:
+                  name: identification_number
+                  value: ВЕЛ-2
+              - column:
+                  name: coordinates
+                  value: 47.22245807938916,39.710144148070555
+              - column:
+                  name: condition
+                  value: EXCELLENT
+              - column:
+                  name: status
+                  value: FREE
+
+  - changeSet:
+      id: insert-transport3
+      author: Dmitry Krivenko
+      changes:
+        - insert:
+            tableName: transport
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: id_parking
+                  value: 1
+              - column:
+                  name: type
+                  value: SCOOTER
+              - column:
+                  name: identification_number
+                  value: ЭСМ-3
+              - column:
+                  name: coordinates
+                  value: 47.236372918786934,39.71263323803597
+              - column:
+                  name: condition
+                  value: EXCELLENT
+              - column:
+                  name: status
+                  value: FREE
+              - column:
+                  name: charge_percentage
+                  value: 100
+              - column:
+                  name: max_speed
+                  value: 25
+
+  - changeSet:
+      id: insert-transport4
+      author: Dmitry Krivenko
+      changes:
+        - insert:
+            tableName: transport
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: id_parking
+                  value: 2
+              - column:
+                  name: type
+                  value: SCOOTER
+              - column:
+                  name: identification_number
+                  value: ЭСМ-4
+              - column:
+                  name: coordinates
+                  value: 47.22245807938916,39.710144148070555
+              - column:
+                  name: condition
+                  value: EXCELLENT
+              - column:
+                  name: status
+                  value: FREE
+              - column:
+                  name: charge_percentage
+                  value: 100
+              - column:
+                  name: max_speed
+                  value: 25
