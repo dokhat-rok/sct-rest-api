@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.entity.enums.ParkingType;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,5 +1,8 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.entity.enums.Condition;
+import com.sct.rest.api.model.entity.enums.TransportStatus;
+import com.sct.rest.api.model.entity.enums.TransportType;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,9 +1,9 @@
 package com.sct.rest.api.telegram.command;
 
 import com.sct.rest.api.model.dto.ParkingDto;
-import com.sct.rest.api.model.entity.TransportType;
+import com.sct.rest.api.model.entity.enums.TransportType;
 import com.sct.rest.api.service.ParkingService;
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +17,20 @@ import java.util.List;
 
 @Component
 public class SearchCommand extends AbstractBotCommand {
-    private final UserService userService;
+    private final CustomerService customerService;
     private final ParkingService parkingService;
 
     @Autowired
-    public SearchCommand(SendMsg msg, UserService userService, ParkingService parkingService){
+    public SearchCommand(SendMsg msg, CustomerService customerService, ParkingService parkingService){
         super("/search", "search command", msg);
-        this.userService = userService;
+        this.customerService = customerService;
         this.parkingService = parkingService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try {
-            if (userService.userExistByLogin(user.getUserName())) {
+            if (customerService.userExistByLogin(user.getUserName())) {
                 msg.send(absSender, chat.getId(), "Парковки", ParseMode.HTML, false);
                 List<ParkingDto> parkingDtoList = parkingService.getAllParking();
                 for(var parking : parkingDtoList){

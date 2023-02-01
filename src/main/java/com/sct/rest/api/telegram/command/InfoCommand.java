@@ -1,8 +1,8 @@
 package com.sct.rest.api.telegram.command;
 
-import com.sct.rest.api.model.dto.UserDto;
+import com.sct.rest.api.model.dto.CustomerDto;
 import com.sct.rest.api.service.TripService;
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,26 +14,26 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 @Component
 public class InfoCommand extends AbstractBotCommand {
-    private final UserService userService;
+    private final CustomerService customerService;
     private final TripService tripService;
 
     @Autowired
-    public InfoCommand(SendMsg msg, UserService userService, TripService tripService){
+    public InfoCommand(SendMsg msg, CustomerService customerService, TripService tripService){
         super("/info", "info command", msg);
-        this.userService = userService;
+        this.customerService = customerService;
         this.tripService = tripService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try{
-            if(userService.userExistByLogin(user.getUserName())){
+            if(customerService.userExistByLogin(user.getUserName())){
                 msg.send(absSender, chat.getId(), "Информация вашего аккаунта", ParseMode.HTML, false);
-                UserDto userDto = userService.getUserByLogin(user.getUserName());
-                String info = "Логин: " + userDto.getLogin() + "\n" +
-                        "Баланс: " + userDto.getBalance() + "₽\n" +
-                        "Роль: " + userDto.getRole() + "\n" +
-                        "Количество совершенных поездок: " + tripService.countRentByUserId(userDto.getId());
+                CustomerDto customerDto = customerService.getUserByLogin(user.getUserName());
+                String info = "Логин: " + customerDto.getLogin() + "\n" +
+                        "Баланс: " + customerDto.getBalance() + "₽\n" +
+                        "Роль: " + customerDto.getRole() + "\n" +
+                        "Количество совершенных поездок: " + tripService.countRentByUserId(customerDto.getId());
                 msg.send(absSender, chat.getId(), info, ParseMode.HTML, false);
             }
             else{

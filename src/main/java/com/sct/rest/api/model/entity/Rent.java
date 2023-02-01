@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.entity.enums.RentStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,8 @@ public class Rent {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_USER")
-    private User user;
+    @JoinColumn(name = "ID_CUSTOMER")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "ID_TRANSPORT")

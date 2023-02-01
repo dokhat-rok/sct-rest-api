@@ -1,9 +1,9 @@
 package com.sct.rest.api.model.dto;
 
 import com.sct.rest.api.model.dto.transport.ParkingNameDto;
-import com.sct.rest.api.model.entity.Condition;
-import com.sct.rest.api.model.entity.TransportStatus;
-import com.sct.rest.api.model.entity.TransportType;
+import com.sct.rest.api.model.entity.enums.Condition;
+import com.sct.rest.api.model.entity.enums.TransportStatus;
+import com.sct.rest.api.model.entity.enums.TransportType;
 import lombok.Getter;
 import lombok.Setter;
 

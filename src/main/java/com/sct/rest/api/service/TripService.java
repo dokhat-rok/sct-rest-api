@@ -4,12 +4,14 @@ import com.sct.rest.api.mapper.rent.RentMapper;
 import com.sct.rest.api.model.dto.RentDto;
 import com.sct.rest.api.model.dto.trip.TripInputBeginDto;
 import com.sct.rest.api.model.dto.trip.TripInputEndDto;
-import com.project.model.entity.*;
 import com.sct.rest.api.model.entity.*;
+import com.sct.rest.api.model.entity.enums.RentStatus;
+import com.sct.rest.api.model.entity.enums.TransportStatus;
+import com.sct.rest.api.model.entity.enums.TransportType;
 import com.sct.rest.api.repository.ParkingRepository;
 import com.sct.rest.api.repository.RentRepository;
 import com.sct.rest.api.repository.TransportRepository;
-import com.sct.rest.api.repository.UserRepository;
+import com.sct.rest.api.repository.CustomerRepository;
 import com.sct.rest.api.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,7 @@ import java.util.Optional;
 @Service
 @PropertySource(value = "classpath:/price.yml")
 public class TripService {
-    private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final ParkingRepository parkingRepository;
     private final TransportRepository transportRepository;
     private final RentRepository rentRepository;
@@ -42,8 +44,8 @@ public class TripService {
     private BigDecimal pricePerMinuteForScooter;
 
     @Autowired
-    public TripService(UserRepository userRepository, ParkingRepository parkingRepository, TransportRepository transportRepository, RentRepository rentRepository, RentMapper rentMapper){
-        this.userRepository = userRepository;
+    public TripService(CustomerRepository customerRepository, ParkingRepository parkingRepository, TransportRepository transportRepository, RentRepository rentRepository, RentMapper rentMapper){
+        this.customerRepository = customerRepository;
         this.parkingRepository = parkingRepository;
         this.transportRepository = transportRepository;
         this.rentRepository = rentRepository;
@@ -60,11 +62,11 @@ public class TripService {
     }
 
     public RentDto beginRent(TripInputBeginDto tripInputBeginDto){
-        Optional<User> userOptional = userRepository.findById(SecurityContext.get().getUserId());
+        Optional<Customer> userOptional = customerRepository.findById(SecurityContext.get().getUserId());
         Optional<Parking> parkingOptional = parkingRepository.findById(tripInputBeginDto.getParkingId());
         Optional<Transport> transportOptional = transportRepository.findById(tripInputBeginDto.getTransportId());
 
-        User user = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getUserId()));
+        Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getUserId()));
         Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripInputBeginDto.getParkingId()));
         Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripInputBeginDto.getTransportId()));
 
@@ -72,7 +74,7 @@ public class TripService {
 
         if(transport.getParking() != null && transport.getStatus() == TransportStatus.FREE)
         {
-            if(user.getBalance().intValue() < initialPrice.longValue() || transport.getStatus() != TransportStatus.FREE || transport.getParking().getId().intValue() != parking.getId().intValue()){
+            if(customer.getBalance().intValue() < initialPrice.longValue() || transport.getStatus() != TransportStatus.FREE || transport.getParking().getId().intValue() != parking.getId().intValue()){
                 throw new ServiceRuntimeException(ErrorCodeEnum.NO_MONEY, new Throwable());
             }
         }
@@ -88,16 +90,16 @@ public class TripService {
         transport.setParking(null);
         transport.setCoordinates(null);
         transport.setStatus(TransportStatus.BUSY);
-        user.setBalance(user.getBalance() - initialPrice.longValue());
+        customer.setBalance(customer.getBalance() - initialPrice.longValue());
 
         Rent rent = new Rent();
-        rent.setUser(user);
+        rent.setCustomer(customer);
         rent.setTransport(transport);
         rent.setBeginTimeRent(new Timestamp(System.currentTimeMillis()));
         rent.setBeginParking(parking);
         rent.setStatus(RentStatus.OPEN);
 
-        userRepository.save(user);
+        customerRepository.save(customer);
         parkingRepository.save(parking);
         transportRepository.save(transport);
         rentRepository.save(rent);
@@ -106,12 +108,12 @@ public class TripService {
     }
 
     public void endRent(TripInputEndDto tripInputEndDto){
-        Optional<User> userOptional = userRepository.findById(SecurityContext.get().getUserId());
+        Optional<Customer> userOptional = customerRepository.findById(SecurityContext.get().getUserId());
         Optional<Parking> parkingOptional = parkingRepository.findById(tripInputEndDto.getParkingId());
         Optional<Transport> transportOptional = transportRepository.findById(tripInputEndDto.getTransportId());
         Optional<Rent> rentOptional = rentRepository.findById(tripInputEndDto.getRentId());
 
-        User user = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getUserId()));
+        Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getUserId()));
         Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripInputEndDto.getParkingId()));
         Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripInputEndDto.getTransportId()));
         Rent rent = rentOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.RENT_NOT_FOUND, new Throwable(), tripInputEndDto.getRentId()));
@@ -133,12 +135,12 @@ public class TripService {
             pricePerMinute = pricePerMinuteForScooter.longValue();
         }
 
-        if(user.getBalance().intValue() < minutes * pricePerMinute){
+        if(customer.getBalance().intValue() < minutes * pricePerMinute){
             throw new ServiceRuntimeException(ErrorCodeEnum.NO_MONEY, new Throwable());
         }
 
         long amount = minutes * pricePerMinute;
-        user.setBalance(user.getBalance() - amount);
+        customer.setBalance(customer.getBalance() - amount);
 
         if(transport.getType() == TransportType.SCOOTER){
             transport.setChargePercentage(transport.getChargePercentage() - 10);
@@ -153,7 +155,7 @@ public class TripService {
         rent.setStatus(RentStatus.CLOSE);
         rent.setAmount(amount + initialPrice.longValue());
 
-        userRepository.save(user);
+        customerRepository.save(customer);
         parkingRepository.save(parking);
         transportRepository.save(transport);
         rentRepository.save(rent);
@@ -173,7 +175,7 @@ public class TripService {
     }
 
     public RentDto beginRentBot(String userLogin ,String parkingName, String transportName){
-        User user = userRepository.findByLogin(userLogin);
+        Customer customer = customerRepository.findByLogin(userLogin);
         Parking parking = parkingRepository.findByName(parkingName);
         Transport transport = transportRepository.findByIdentificationNumber(transportName);
 
@@ -181,7 +183,7 @@ public class TripService {
 
         if(transport.getParking() != null && transport.getStatus() == TransportStatus.FREE)
         {
-            if(user.getBalance().intValue() < initialPrice.longValue() || transport.getStatus() != TransportStatus.FREE || transport.getParking().getId().intValue() != parking.getId().intValue()){
+            if(customer.getBalance().intValue() < initialPrice.longValue() || transport.getStatus() != TransportStatus.FREE || transport.getParking().getId().intValue() != parking.getId().intValue()){
                 throw new ServiceRuntimeException(ErrorCodeEnum.NO_MONEY, new Throwable());
             }
         }
@@ -197,16 +199,16 @@ public class TripService {
         transport.setParking(null);
         transport.setCoordinates(null);
         transport.setStatus(TransportStatus.BUSY);
-        user.setBalance(user.getBalance() - initialPrice.longValue());
+        customer.setBalance(customer.getBalance() - initialPrice.longValue());
 
         Rent rent = new Rent();
-        rent.setUser(user);
+        rent.setCustomer(customer);
         rent.setTransport(transport);
         rent.setBeginTimeRent(new Timestamp(System.currentTimeMillis()));
         rent.setBeginParking(parking);
         rent.setStatus(RentStatus.OPEN);
 
-        userRepository.save(user);
+        customerRepository.save(customer);
         parkingRepository.save(parking);
         transportRepository.save(transport);
         rentRepository.save(rent);
@@ -215,7 +217,7 @@ public class TripService {
     }
 
     public RentDto endRentBot(String userLogin ,String parkingName, String transportName){
-        User user = userRepository.findByLogin(userLogin);
+        Customer customer = customerRepository.findByLogin(userLogin);
         Parking parking = parkingRepository.findByName(parkingName);
         Transport transport = transportRepository.findByIdentificationNumber(transportName);
         Rent rent = rentRepository.getRentByLoginAndTransport(userLogin, transportName);
@@ -233,12 +235,12 @@ public class TripService {
             pricePerMinute = pricePerMinuteForScooter.longValue();
         }
 
-        if(user.getBalance().intValue() < minutes * pricePerMinute){
+        if(customer.getBalance().intValue() < minutes * pricePerMinute){
             throw new ServiceRuntimeException(ErrorCodeEnum.NO_MONEY, new Throwable());
         }
 
         long amount = minutes * pricePerMinute;
-        user.setBalance(user.getBalance() - amount);
+        customer.setBalance(customer.getBalance() - amount);
 
         if(transport.getType() == TransportType.SCOOTER){
             transport.setChargePercentage(transport.getChargePercentage() - 10);
@@ -253,7 +255,7 @@ public class TripService {
         rent.setStatus(RentStatus.CLOSE);
         rent.setAmount(amount + initialPrice.longValue());
 
-        userRepository.save(user);
+        customerRepository.save(customer);
         parkingRepository.save(parking);
         transportRepository.save(transport);
         rentRepository.save(rent);

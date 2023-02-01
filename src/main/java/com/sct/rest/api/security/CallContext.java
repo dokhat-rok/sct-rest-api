@@ -1,6 +1,6 @@
 package com.sct.rest.api.security;
 
-import com.sct.rest.api.model.entity.Role;
+import com.sct.rest.api.model.entity.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

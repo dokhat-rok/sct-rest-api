@@ -2,7 +2,7 @@ package com.sct.rest.api.telegram.command;
 
 import com.sct.rest.api.model.dto.RentDto;
 import com.sct.rest.api.service.TripService;
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.stereotype.Component;
@@ -13,19 +13,19 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 @Component
 public class FinishCommand extends AbstractBotCommand {
-    private final UserService userService;
+    private final CustomerService customerService;
     private final TripService tripService;
 
-    public FinishCommand(SendMsg msg, UserService userService, TripService tripService){
+    public FinishCommand(SendMsg msg, CustomerService customerService, TripService tripService){
         super("/finish", "finish command", msg);
-        this.userService = userService;
+        this.customerService = customerService;
         this.tripService = tripService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try{
-            if(userService.userExistByLogin(user.getUserName())){
+            if(customerService.userExistByLogin(user.getUserName())){
                 RentDto rent = tripService.endRentBot(user.getUserName(), strings[0], strings[1]);
                 msg.send(absSender, chat.getId(), "Ваша поездка окончена! Спасибо, что выбрали нашего бота", ParseMode.HTML, false);
                 String finish = "Время окончания поездки: " + rent.getEndTimeRent() + "\n" +

@@ -2,7 +2,7 @@ package com.sct.rest.api.telegram.command;
 
 import com.sct.rest.api.model.dto.RentDto;
 import com.sct.rest.api.service.TripService;
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +14,20 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 @Component
 public class TripCommand extends AbstractBotCommand {
-    private final UserService userService;
+    private final CustomerService customerService;
     private final TripService tripService;
 
     @Autowired
-    public TripCommand(SendMsg msg, UserService userService, TripService tripService){
+    public TripCommand(SendMsg msg, CustomerService customerService, TripService tripService){
         super("/trip", "trip command", msg);
-        this.userService = userService;
+        this.customerService = customerService;
         this.tripService = tripService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try{
-            if(userService.userExistByLogin(user.getUserName())){
+            if(customerService.userExistByLogin(user.getUserName())){
                 RentDto rent = tripService.beginRentBot(user.getUserName(), strings[0], strings[1]);
                 msg.send(absSender, chat.getId(), "Ваша поездка началась. Приятного пути!", ParseMode.HTML, false);
                 String trip = "Время начала поездки: " + rent.getBeginTimeRent() + "\n" +

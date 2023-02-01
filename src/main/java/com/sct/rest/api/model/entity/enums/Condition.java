@@ -1,4 +1,4 @@
-package com.sct.rest.api.model.entity;
+package com.sct.rest.api.model.entity.enums;
 
 public enum Condition {
     EXCELLENT, GOOD, SATISFACTORY;

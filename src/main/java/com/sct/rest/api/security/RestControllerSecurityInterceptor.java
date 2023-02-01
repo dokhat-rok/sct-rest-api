@@ -2,7 +2,7 @@ package com.sct.rest.api.security;
 
 import com.sct.rest.api.service.ServiceRuntimeException;
 import com.sct.rest.api.service.ErrorCodeEnum;
-import com.sct.rest.api.model.entity.Role;
+import com.sct.rest.api.model.entity.enums.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.entity.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,12 +8,12 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@Entity(name = "User")
+@Entity
 @Table(name = "customer")
-public class User {
+public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user")
-    @SequenceGenerator(name = "seq_user", sequenceName = "seq_user", initialValue = 2, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_customer")
+    @SequenceGenerator(name = "seq_customer", sequenceName = "seq_customer", initialValue = 2, allocationSize = 1)
     private Long id;
 
     @Column(name = "LOGIN")

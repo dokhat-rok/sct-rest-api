@@ -1,6 +1,6 @@
 package com.sct.rest.api.telegram.command;
 
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,18 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 @Component
 public class HelpCommand extends AbstractBotCommand {
-    private final UserService userService;
+    private final CustomerService customerService;
 
     @Autowired
-    public HelpCommand(SendMsg msg, UserService userService){
+    public HelpCommand(SendMsg msg, CustomerService customerService){
         super("/help", "help command", msg);
-        this.userService = userService;
+        this.customerService = customerService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try{
-            if(userService.userExistByLogin(user.getUserName())){
+            if(customerService.userExistByLogin(user.getUserName())){
                 msg.send(absSender, chat.getId(), "Навигация", ParseMode.HTML, false);
 
                 String help = "/info - информация о пользователе \n" +

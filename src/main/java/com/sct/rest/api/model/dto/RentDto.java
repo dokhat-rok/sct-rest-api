@@ -1,6 +1,6 @@
 package com.sct.rest.api.model.dto;
 
-import com.sct.rest.api.model.entity.RentStatus;
+import com.sct.rest.api.model.entity.enums.RentStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class RentDto {
     private Long id;
     @Valid
     private TransportDto transport;
-    private UserDto user;
+    private CustomerDto user;
     @NotNull
     private Timestamp beginTimeRent;
     private Timestamp endTimeRent;

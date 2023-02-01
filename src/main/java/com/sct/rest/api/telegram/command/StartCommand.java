@@ -1,7 +1,8 @@
 package com.sct.rest.api.telegram.command;
 
-import com.sct.rest.api.model.entity.Role;
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.model.entity.Customer;
+import com.sct.rest.api.model.entity.enums.Role;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,37 +18,37 @@ import java.math.BigDecimal;
 @Component
 public class StartCommand extends AbstractBotCommand {
     private final SendMsg msg;
-    private final UserService userService;
+    private final CustomerService customerService;
     @Value("${bot.name}")
     private String nameBot;
     @Value("${bot.beginBalance}")
     private BigDecimal beginBalance;
 
     @Autowired
-    public StartCommand(SendMsg msg, UserService userService){
+    public StartCommand(SendMsg msg, CustomerService customerService){
         super("/start", "start command", msg);
         this.msg = msg;
-        this.userService = userService;
+        this.customerService = customerService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try{
             msg.send(absSender, chat.getId(), "Добро пожаловать в " + nameBot, ParseMode.HTML, false);
-            if(userService.userExistByLogin(user.getUserName())){
+            if(customerService.userExistByLogin(user.getUserName())){
                 msg.send(absSender, chat.getId(), String.format("Здравсвтуйте %s", user.getUserName()), ParseMode.HTML, false);
             }
             else{
-                com.sct.rest.api.model.entity.User newUser = new com.sct.rest.api.model.entity.User();
-                newUser.setLogin(user.getUserName());
-                newUser.setPassword(user.getUserName());
-                newUser.setBalance(beginBalance.longValue());
-                newUser.setRole(Role.USER);
-                userService.createUser(newUser);
+                Customer newCustomer = new Customer();
+                newCustomer.setLogin(user.getUserName());
+                newCustomer.setPassword(user.getUserName());
+                newCustomer.setBalance(beginBalance.longValue());
+                newCustomer.setRole(Role.USER);
+                customerService.createUser(newCustomer);
 
                 String start = String.format(
                         "%s, вы были зарегистрированы! \n" +
-                        "Для навигации введите /help", newUser.getLogin()
+                        "Для навигации введите /help", newCustomer.getLogin()
                 );
 
                 msg.send(absSender, chat.getId(), start, ParseMode.HTML, false);

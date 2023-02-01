@@ -1,6 +1,6 @@
 package com.sct.rest.api.model.dto;
 
-import com.sct.rest.api.model.entity.Role;
+import com.sct.rest.api.model.entity.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class UserDto {
+public class CustomerDto {
     private Long id;
     @NotBlank
     @Size(max = 20)

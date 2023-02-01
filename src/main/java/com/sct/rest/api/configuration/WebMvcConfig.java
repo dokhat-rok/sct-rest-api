@@ -2,14 +2,23 @@ package com.sct.rest.api.configuration;
 
 import com.sct.rest.api.security.RestControllerSecurityInterceptor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
+
 @Configuration
 @RequiredArgsConstructor
-public class WebConfiguration implements WebMvcConfigurer {
+@Slf4j
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Value("#{'${cors.registry.allowed-origins}'.split(', ')}")
+    private String[] origins;
+
     private final RestControllerSecurityInterceptor interceptor;
 
     @Override
@@ -19,9 +28,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .exposedHeaders("content-disposition", "content-type");
+        log.info("CORS config: allowed-origins={}", Arrays.toString(origins));
+        registry.addMapping("/**").allowedOrigins(origins);
     }
 }

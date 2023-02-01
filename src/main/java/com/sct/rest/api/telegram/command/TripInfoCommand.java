@@ -1,9 +1,9 @@
 package com.sct.rest.api.telegram.command;
 
 import com.sct.rest.api.model.dto.RentDto;
-import com.sct.rest.api.model.entity.RentStatus;
+import com.sct.rest.api.model.entity.enums.RentStatus;
 import com.sct.rest.api.service.TripService;
-import com.sct.rest.api.service.UserService;
+import com.sct.rest.api.service.CustomerService;
 import com.sct.rest.api.telegram.AbstractBotCommand;
 import com.sct.rest.api.telegram.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +17,20 @@ import java.util.List;
 
 @Component
 public class TripInfoCommand extends AbstractBotCommand {
-    private final UserService userService;
+    private final CustomerService customerService;
     private final TripService tripService;
 
     @Autowired
-    public TripInfoCommand(SendMsg msg, UserService userService, TripService tripService){
+    public TripInfoCommand(SendMsg msg, CustomerService customerService, TripService tripService){
         super("/infotrip", "tripInfo command", msg);
-        this.userService = userService;
+        this.customerService = customerService;
         this.tripService = tripService;
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         try{
-            if(userService.userExistByLogin(user.getUserName())){
+            if(customerService.userExistByLogin(user.getUserName())){
                 msg.send(absSender, chat.getId(), "Ваши поездки", ParseMode.HTML, false);
                 List<RentDto> rentDtoList = tripService.allRentByUser(user.getUserName());
                 for(var rent : rentDtoList){
