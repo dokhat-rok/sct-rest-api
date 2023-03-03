@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface RentRepository  extends JpaRepository<Rent, Long> {
-    @Query("select count (rent) from Rent rent where rent.customer.id = :id and rent.status = 'CLOSE'")
-    Long countRentByUserId(Long id);
+    @Query("select count (rent) from Rent rent where rent.customer.login = :login and rent.status = 'CLOSE'")
+    Long countRentByCustomerLogin(String login);
 
     @Query("select rent from Rent rent where rent.customer.login = :userLogin")
     Iterable<Rent> allRentByUserLogin(String userLogin);

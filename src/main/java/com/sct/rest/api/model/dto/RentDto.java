@@ -14,7 +14,7 @@ public class RentDto {
     private Long id;
     @Valid
     private TransportDto transport;
-    private CustomerDto user;
+    private CustomerDto customer;
     @NotNull
     private Timestamp beginTimeRent;
     private Timestamp endTimeRent;

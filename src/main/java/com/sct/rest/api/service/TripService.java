@@ -62,11 +62,11 @@ public class TripService {
     }
 
     public RentDto beginRent(TripInputBeginDto tripInputBeginDto){
-        Optional<Customer> userOptional = customerRepository.findById(SecurityContext.get().getUserId());
+        Optional<Customer> userOptional = customerRepository.findByLogin(SecurityContext.get().getCustomerLogin());
         Optional<Parking> parkingOptional = parkingRepository.findById(tripInputBeginDto.getParkingId());
         Optional<Transport> transportOptional = transportRepository.findById(tripInputBeginDto.getTransportId());
 
-        Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getUserId()));
+        Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getCustomerLogin()));
         Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripInputBeginDto.getParkingId()));
         Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripInputBeginDto.getTransportId()));
 
@@ -108,12 +108,12 @@ public class TripService {
     }
 
     public void endRent(TripInputEndDto tripInputEndDto){
-        Optional<Customer> userOptional = customerRepository.findById(SecurityContext.get().getUserId());
+        Optional<Customer> userOptional = customerRepository.findByLogin(SecurityContext.get().getCustomerLogin());
         Optional<Parking> parkingOptional = parkingRepository.findById(tripInputEndDto.getParkingId());
         Optional<Transport> transportOptional = transportRepository.findById(tripInputEndDto.getTransportId());
         Optional<Rent> rentOptional = rentRepository.findById(tripInputEndDto.getRentId());
 
-        Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getUserId()));
+        Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getCustomerLogin()));
         Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripInputEndDto.getParkingId()));
         Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripInputEndDto.getTransportId()));
         Rent rent = rentOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.RENT_NOT_FOUND, new Throwable(), tripInputEndDto.getRentId()));
@@ -161,8 +161,8 @@ public class TripService {
         rentRepository.save(rent);
     }
 
-    public Long countRentByUserId(Long id){
-        return rentRepository.countRentByUserId(id);
+    public Long countRentByUserLogin(String login){
+        return rentRepository.countRentByCustomerLogin(login);
     }
 
     public List<RentDto> allRentByUser(String login){
@@ -175,13 +175,13 @@ public class TripService {
     }
 
     public RentDto beginRentBot(String userLogin ,String parkingName, String transportName){
-        Customer customer = customerRepository.findByLogin(userLogin);
+        Customer customer = customerRepository.findByLogin(userLogin).orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), userLogin));
         Parking parking = parkingRepository.findByName(parkingName);
         Transport transport = transportRepository.findByIdentificationNumber(transportName);
 
         BigDecimal initialPrice = transport.getType() == TransportType.BICYCLE ? initialPriceForBicycle : initialPriceForScooter;
 
-        if(transport.getParking() != null && transport.getStatus() == TransportStatus.FREE)
+        if(transport.getParking() != null && transport.getStatus() == TransportStatus.FREE && customer != null)
         {
             if(customer.getBalance().intValue() < initialPrice.longValue() || transport.getStatus() != TransportStatus.FREE || transport.getParking().getId().intValue() != parking.getId().intValue()){
                 throw new ServiceRuntimeException(ErrorCodeEnum.NO_MONEY, new Throwable());
@@ -217,7 +217,7 @@ public class TripService {
     }
 
     public RentDto endRentBot(String userLogin ,String parkingName, String transportName){
-        Customer customer = customerRepository.findByLogin(userLogin);
+        Customer customer = customerRepository.findByLogin(userLogin).orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), userLogin));
         Parking parking = parkingRepository.findByName(parkingName);
         Transport transport = transportRepository.findByIdentificationNumber(transportName);
         Rent rent = rentRepository.getRentByLoginAndTransport(userLogin, transportName);

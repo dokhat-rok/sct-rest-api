@@ -1,16 +1,17 @@
 package com.sct.rest.api.security;
 
 import com.sct.rest.api.model.entity.enums.Role;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@Builder
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CallContext {
-    private Long userId;
-    private String userLogin;
-    private Role userRole;
-    private Long userBalance;
+
+    private String customerLogin;
+
+    private String customerPassword;
+
+    private Role customerRole;
 }
