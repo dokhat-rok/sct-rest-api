@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.rent(
     id_customer         BIGINT      NOT NULL,
     id_transport        BIGINT      NOT NULL,
     id_begin_parking    BIGINT      NOT NULL,
-    id_end_parking      BIGINT      NOT NULL,
+    id_end_parking      BIGINT,
     begin_time_rent     TIMESTAMP   NOT NULL,
     end_time_rent       TIMESTAMP,
     status              VARCHAR     NOT NULL,

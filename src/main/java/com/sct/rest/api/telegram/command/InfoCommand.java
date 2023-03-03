@@ -33,7 +33,7 @@ public class InfoCommand extends AbstractBotCommand {
                 String info = "Логин: " + customerDto.getLogin() + "\n" +
                         "Баланс: " + customerDto.getBalance() + "₽\n" +
                         "Роль: " + customerDto.getRole() + "\n" +
-                        "Количество совершенных поездок: " + tripService.countRentByUserId(customerDto.getId());
+                        "Количество совершенных поездок: " + tripService.countRentByUserLogin(customerDto.getLogin());
                 msg.send(absSender, chat.getId(), info, ParseMode.HTML, false);
             }
             else{
