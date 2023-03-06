@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Validated
 @Slf4j
-public class RestControllerErrorHandler {
+public class ErrorHandler {
     @ExceptionHandler(ServiceRuntimeException.class)
     public ResponseEntity<ErrorDto> handleBusinessException(ServiceRuntimeException ex) {
         log.error(ex.getMessage(), ex);
