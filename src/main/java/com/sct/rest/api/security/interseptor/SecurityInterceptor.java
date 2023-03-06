@@ -1,6 +1,8 @@
-package com.sct.rest.api.security;
+package com.sct.rest.api.security.interseptor;
 
+import com.sct.rest.api.model.dto.security.CallContext;
 import com.sct.rest.api.model.enums.Role;
+import com.sct.rest.api.security.SecurityContext;
 import com.sct.rest.api.service.ErrorCodeEnum;
 import com.sct.rest.api.service.ServiceRuntimeException;
 import io.jsonwebtoken.Claims;
@@ -20,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RestControllerSecurityInterceptor implements HandlerInterceptor {
+public class SecurityInterceptor implements HandlerInterceptor {
 
     @Value("${jwt.secret}")
     private String secret;

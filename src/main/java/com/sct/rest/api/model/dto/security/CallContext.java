@@ -1,4 +1,4 @@
-package com.sct.rest.api.security;
+package com.sct.rest.api.model.dto.security;
 
 import com.sct.rest.api.model.enums.Role;
 import lombok.AllArgsConstructor;

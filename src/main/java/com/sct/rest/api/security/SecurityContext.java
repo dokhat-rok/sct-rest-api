@@ -1,5 +1,7 @@
 package com.sct.rest.api.security;
 
+import com.sct.rest.api.model.dto.security.CallContext;
+
 public class SecurityContext {
     private static final ThreadLocal<CallContext> context = new ThreadLocal<>();
 

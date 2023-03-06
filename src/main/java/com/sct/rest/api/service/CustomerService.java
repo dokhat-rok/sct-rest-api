@@ -5,10 +5,8 @@ import com.sct.rest.api.model.dto.CustomerDto;
 import com.sct.rest.api.model.entity.Customer;
 import com.sct.rest.api.repository.CustomerRepository;
 import com.sct.rest.api.repository.RentRepository;
-import com.sct.rest.api.security.CallContext;
 import com.sct.rest.api.security.SecurityContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
