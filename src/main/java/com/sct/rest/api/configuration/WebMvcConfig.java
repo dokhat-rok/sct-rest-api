@@ -1,6 +1,6 @@
 package com.sct.rest.api.configuration;
 
-import com.sct.rest.api.security.RestControllerSecurityInterceptor;
+import com.sct.rest.api.security.interseptor.SecurityInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,10 +19,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Value("#{'${cors.registry.allowed-origins}'.split(', ')}")
     private String[] origins;
 
-    private final RestControllerSecurityInterceptor interceptor;
+    private final SecurityInterceptor interceptor;
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry){
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor).addPathPatterns("/**");
     }
 
