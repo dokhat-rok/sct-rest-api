@@ -1,47 +1,57 @@
 package com.sct.rest.api.controller;
 
+import com.sct.rest.api.model.dto.ParkingDto;
 import com.sct.rest.api.model.dto.parking.AddTransportDto;
 import com.sct.rest.api.service.ParkingService;
-import com.sct.rest.api.model.dto.ParkingDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@Validated
 @RequestMapping("/parking")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ParkingController {
+
     private final ParkingService parkingService;
 
-    @Autowired
-    public ParkingController(ParkingService parkingService){
-        this.parkingService = parkingService;
-    }
-
-    @GetMapping
-    public List<ParkingDto> getAllParking(){
-        return parkingService.getAllParking();
+    @GetMapping("/all")
+    public ResponseEntity<List<ParkingDto>> getAllParking() {
+        List<ParkingDto> parkingList = parkingService.getAllParking();
+        log.info("Get all parking count: {}", parkingList.size());
+        return ResponseEntity.ok(parkingList);
     }
 
     @PostMapping
-    public void createParking(@RequestBody @Validated ParkingDto parkingDto){
-        parkingService.createParking(parkingDto);
+    public ResponseEntity<Void> createParking(@RequestBody ParkingDto parking) {
+        parkingService.createParking(parking);
+        log.info("Create parking {}#{}", parking.getName(), parking.getType());
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    public void updateParking(@RequestBody @Validated ParkingDto parkingDto){
-        parkingService.updateParking(parkingDto);
+    public ResponseEntity<Void> updateParking(@RequestBody ParkingDto parking) {
+        parkingService.updateParking(parking);
+        log.info("Update parking {}#{}", parking.getName(), parking.getType());
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/addTransport")
-    public void addTransport(@RequestBody @Validated AddTransportDto addTransportDto){
-        parkingService.addTransport(addTransportDto);
+    @PutMapping("/add/transport")
+    public ResponseEntity<Void> addTransport(@RequestBody AddTransportDto addTransport) {
+        parkingService.addTransport(addTransport);
+        log.info("Add transport {} to parking {}", addTransport.getTransportId(), addTransport.getParkingId());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public void deleteParking(@RequestBody @Validated ParkingDto parkingDto){
-        parkingService.deleteParking(parkingDto);
+    public ResponseEntity<Void> deleteParking(@RequestBody ParkingDto parking) {
+        parkingService.deleteParking(parking);
+        log.info("Delete parking {}#{}", parking.getName(), parking.getType());
+        return ResponseEntity.ok().build();
     }
 }

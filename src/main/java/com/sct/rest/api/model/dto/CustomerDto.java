@@ -3,6 +3,7 @@ package com.sct.rest.api.model.dto;
 import com.sct.rest.api.model.entity.enums.Role;
 import lombok.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -15,7 +16,6 @@ import javax.validation.constraints.Size;
 public class CustomerDto {
 
     @NotBlank
-    @Size(max = 20)
     private String login;
 
     @NotNull
@@ -25,5 +25,6 @@ public class CustomerDto {
     @NotNull(message = "Роль не может быть пустой")
     private Role role;
 
+    @PositiveOrZero
     private Long tripCount;
 }

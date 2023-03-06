@@ -2,8 +2,8 @@ package com.sct.rest.api.service;
 
 import com.sct.rest.api.mapper.rent.RentMapper;
 import com.sct.rest.api.model.dto.RentDto;
-import com.sct.rest.api.model.dto.trip.TripInputBeginDto;
-import com.sct.rest.api.model.dto.trip.TripInputEndDto;
+import com.sct.rest.api.model.dto.trip.TripBeginDto;
+import com.sct.rest.api.model.dto.trip.TripEndDto;
 import com.sct.rest.api.model.entity.*;
 import com.sct.rest.api.model.entity.enums.RentStatus;
 import com.sct.rest.api.model.entity.enums.TransportStatus;
@@ -61,14 +61,14 @@ public class TripService {
         return rentDtoList;
     }
 
-    public RentDto beginRent(TripInputBeginDto tripInputBeginDto){
+    public RentDto beginRent(TripBeginDto tripBeginDto){
         Optional<Customer> userOptional = customerRepository.findByLogin(SecurityContext.get().getCustomerLogin());
-        Optional<Parking> parkingOptional = parkingRepository.findById(tripInputBeginDto.getParkingId());
-        Optional<Transport> transportOptional = transportRepository.findById(tripInputBeginDto.getTransportId());
+        Optional<Parking> parkingOptional = parkingRepository.findById(tripBeginDto.getParkingId());
+        Optional<Transport> transportOptional = transportRepository.findById(tripBeginDto.getTransportId());
 
         Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getCustomerLogin()));
-        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripInputBeginDto.getParkingId()));
-        Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripInputBeginDto.getTransportId()));
+        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripBeginDto.getParkingId()));
+        Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripBeginDto.getTransportId()));
 
         BigDecimal initialPrice = transport.getType() == TransportType.BICYCLE ? initialPriceForBicycle : initialPriceForScooter;
 
@@ -107,16 +107,16 @@ public class TripService {
         return rentMapper.modelToDto(rent);
     }
 
-    public void endRent(TripInputEndDto tripInputEndDto){
+    public void endRent(TripEndDto tripEndDto){
         Optional<Customer> userOptional = customerRepository.findByLogin(SecurityContext.get().getCustomerLogin());
-        Optional<Parking> parkingOptional = parkingRepository.findById(tripInputEndDto.getParkingId());
-        Optional<Transport> transportOptional = transportRepository.findById(tripInputEndDto.getTransportId());
-        Optional<Rent> rentOptional = rentRepository.findById(tripInputEndDto.getRentId());
+        Optional<Parking> parkingOptional = parkingRepository.findById(tripEndDto.getParkingId());
+        Optional<Transport> transportOptional = transportRepository.findById(tripEndDto.getTransportId());
+        Optional<Rent> rentOptional = rentRepository.findById(tripEndDto.getRentId());
 
         Customer customer = userOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), SecurityContext.get().getCustomerLogin()));
-        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripInputEndDto.getParkingId()));
-        Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripInputEndDto.getTransportId()));
-        Rent rent = rentOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.RENT_NOT_FOUND, new Throwable(), tripInputEndDto.getRentId()));
+        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), tripEndDto.getParkingId()));
+        Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), tripEndDto.getTransportId()));
+        Rent rent = rentOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.RENT_NOT_FOUND, new Throwable(), tripEndDto.getRentId()));
 
         BigDecimal initialPrice = transport.getType() == TransportType.BICYCLE ? initialPriceForBicycle : initialPriceForScooter;
 

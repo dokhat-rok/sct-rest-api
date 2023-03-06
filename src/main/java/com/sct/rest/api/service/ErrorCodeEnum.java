@@ -17,7 +17,7 @@ public enum ErrorCodeEnum {
     TRANSPORT_NOT_AVAILABLE("Транспорт недоступен"),
     NO_MONEY("Недостаточно денежных средств"),
     VALIDATION_ERROR("Ошибка валидации"),
-    ERROR_AUTHORIZATION("Ошибка авториразции", HttpStatus.UNAUTHORIZED);
+    ERROR_AUTHORIZATION("Ошибка авторизации", HttpStatus.UNAUTHORIZED);
     private HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     private final String messageTemplate;
 
