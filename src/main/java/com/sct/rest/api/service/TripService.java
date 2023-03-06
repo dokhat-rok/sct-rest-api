@@ -166,7 +166,7 @@ public class TripService {
     }
 
     public List<RentDto> allRentByUser(String login){
-        Iterable<Rent> rentIterable = rentRepository.allRentByUserLogin(login);
+        Iterable<Rent> rentIterable = rentRepository.allRentByCustomerLogin(login);
         List<RentDto> rentDtoList = new ArrayList<>();
         for(var rent : rentIterable){
             rentDtoList.add(rentMapper.modelToDto(rent));
