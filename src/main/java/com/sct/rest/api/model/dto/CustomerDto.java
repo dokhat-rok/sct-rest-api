@@ -1,13 +1,14 @@
 package com.sct.rest.api.model.dto;
 
-import com.sct.rest.api.model.entity.enums.Role;
-import lombok.*;
+import com.sct.rest.api.model.enums.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
 
 @Data
 @Builder(toBuilder = true)

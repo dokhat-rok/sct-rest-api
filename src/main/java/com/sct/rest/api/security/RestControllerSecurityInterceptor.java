@@ -2,7 +2,7 @@ package com.sct.rest.api.security;
 
 import com.sct.rest.api.service.ServiceRuntimeException;
 import com.sct.rest.api.service.ErrorCodeEnum;
-import com.sct.rest.api.model.entity.enums.Role;
+import com.sct.rest.api.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +38,7 @@ public class RestControllerSecurityInterceptor extends HandlerInterceptorAdapter
             CallContext callContext = CallContext.builder()
                     .customerLogin(claims.get("login", String.class))
                     .customerPassword(claims.get("password", String.class))
-                    .customerRole(Role.getRole(claims.get("role", String.class)))
+                    .customerRole(Role.valueOf(claims.get("role", String.class)))
                     .build();
             log.info("Пользователь [{}], роль [{}]", callContext.getCustomerLogin(), callContext.getCustomerRole());
             SecurityContext.set(callContext);

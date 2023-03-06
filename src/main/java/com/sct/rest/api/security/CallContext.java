@@ -1,6 +1,6 @@
 package com.sct.rest.api.security;
 
-import com.sct.rest.api.model.entity.enums.Role;
+import com.sct.rest.api.model.enums.Role;
 import lombok.*;
 
 @Data
