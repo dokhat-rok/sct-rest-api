@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = ParkingNameMapper.class)
 public interface TransportMapper {
+
     Transport dtoToModel(TransportDto transportDto);
+
     TransportDto modelToDto(Transport transport);
 }

@@ -6,5 +6,6 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface RentMapper {
+
     RentDto modelToDto(Rent rent);
 }
