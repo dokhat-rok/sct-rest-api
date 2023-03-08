@@ -1,48 +1,49 @@
 package com.sct.rest.api.model.entity;
 
-import com.sct.rest.api.model.entity.enums.Condition;
-import com.sct.rest.api.model.entity.enums.TransportStatus;
-import com.sct.rest.api.model.entity.enums.TransportType;
-import lombok.Getter;
-import lombok.Setter;
+import com.sct.rest.api.model.enums.Condition;
+import com.sct.rest.api.model.enums.TransportStatus;
+import com.sct.rest.api.model.enums.TransportType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
-@Entity(name = "Transport")
-@Table(name = "TRANSPORT")
+@Entity
+@Table
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_transport")
     @SequenceGenerator(name = "seq_transport", sequenceName = "seq_transport", initialValue = 5, allocationSize = 1)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_PARKING")
+    @JoinColumn(name = "id_parking")
     private Parking parking;
 
-    @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
     private TransportType type;
 
-    @Column(name = "IDENTIFICATION_NUMBER")
+    @Column(name = "identification_number")
     private String identificationNumber;
 
-    @Column(name = "COORDINATES")
     private String coordinates;
 
-    @Column(name = "CONDITION")
     @Enumerated(EnumType.STRING)
     private Condition condition;
 
-    @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private TransportStatus status;
 
-    @Column(name = "CHARGE_PERCENTAGE")
+    @Column(name = "charge_percentage")
     private Long chargePercentage;
 
-    @Column(name = "MAX_SPEED")
+    @Column(name = "max_speed")
     private Long maxSpeed;
 }

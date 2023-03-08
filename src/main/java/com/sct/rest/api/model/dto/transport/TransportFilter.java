@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParkingNameDto {
+public class TransportFilter {
 
-    private String name;
+    private String type;
 
+    private String status;
 }

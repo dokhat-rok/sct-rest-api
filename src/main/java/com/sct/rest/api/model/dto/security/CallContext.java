@@ -1,7 +1,10 @@
-package com.sct.rest.api.security;
+package com.sct.rest.api.model.dto.security;
 
-import com.sct.rest.api.model.entity.enums.Role;
-import lombok.*;
+import com.sct.rest.api.model.enums.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder(toBuilder = true)

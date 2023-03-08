@@ -2,7 +2,6 @@ package com.sct.rest.api.configuration;
 
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -16,14 +15,14 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class DataSourceConfig {
 
-    private final DataSource dataSource;
-
     @Value("${liquibase.changelog-file}")
     private String changeLogFile;
 
+    private final DataSource dataSource;
+
     @ConditionalOnProperty(value = "spring.liquibase.enabled", havingValue = "true")
     @Bean
-    public SpringLiquibase initLiquibase(){
+    public SpringLiquibase initLiquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog(changeLogFile);

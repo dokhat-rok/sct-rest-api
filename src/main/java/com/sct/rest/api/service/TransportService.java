@@ -1,96 +1,101 @@
 package com.sct.rest.api.service;
 
+import com.sct.rest.api.exception.ServiceRuntimeException;
+import com.sct.rest.api.exception.enums.ErrorCodeEnum;
 import com.sct.rest.api.mapper.transport.TransportMapper;
 import com.sct.rest.api.model.dto.TransportDto;
-import com.sct.rest.api.model.dto.transport.ParkingNameDto;
-import com.sct.rest.api.model.entity.*;
-import com.sct.rest.api.model.entity.enums.Condition;
-import com.sct.rest.api.model.entity.enums.TransportStatus;
-import com.sct.rest.api.model.entity.enums.TransportType;
+import com.sct.rest.api.model.dto.transport.TransportFilter;
+import com.sct.rest.api.model.entity.Parking;
+import com.sct.rest.api.model.entity.Transport;
+import com.sct.rest.api.model.enums.Condition;
+import com.sct.rest.api.model.enums.TransportStatus;
+import com.sct.rest.api.model.enums.TransportType;
 import com.sct.rest.api.repository.ParkingRepository;
 import com.sct.rest.api.repository.TransportRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TransportService {
+
     private final ParkingRepository parkingRepository;
+
     private final TransportRepository transportRepository;
+
     private final TransportMapper transportMapper;
 
-    @Autowired
-    public TransportService(ParkingRepository parkingRepository, TransportRepository transportRepository, TransportMapper transportMapper){
-        this.parkingRepository = parkingRepository;
-        this.transportRepository = transportRepository;
-        this.transportMapper = transportMapper;
-    }
-
-    public List<TransportDto> getAllTransport(){
-        Iterable<Parking> parkingIterable = parkingRepository.findAll();
-        List<TransportDto> transportDtoList = new ArrayList<>();
-        for(var parking: parkingIterable){
-            for(var transport : parking.getTransports()){
-                TransportDto transportDto = transportMapper.modelToDto(transport);
-                transportDtoList.add(transportDto);
-            }
+    public List<TransportDto> getAllTransportByFilter(TransportFilter filter) {
+        TransportType type = null;
+        try {
+            type = TransportType.valueOf(filter.getType().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ServiceRuntimeException(ErrorCodeEnum.VALIDATION_ERROR, new Throwable());
+        } catch (NullPointerException ignored) {
         }
-        return transportDtoList;
-    }
 
-    public List<TransportDto> findTransport(TransportType type, TransportStatus status){
-        Iterable<Transport> transportIterable = transportRepository.findAll();
-        List<TransportDto> transportDtoList = new ArrayList<>();
-        for(var transport: transportIterable){
-            if(transport.getType() == type && transport.getStatus() == status){
-                transportDtoList.add(transportMapper.modelToDto(transport));
-            }
+        TransportStatus status = null;
+        try {
+            status = TransportStatus.valueOf(filter.getStatus().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ServiceRuntimeException(ErrorCodeEnum.VALIDATION_ERROR, new Throwable());
+        } catch (NullPointerException ignored) {
         }
-        return transportDtoList;
+
+        if (status != null && type != null) return this.getAllTransportByTypeAndStatus(type, status);
+        if (status != null) return this.getAllTransportByStatus(status);
+        if (type != null) return this.getAllTransportByType(type);
+        return this.getAllTransport();
     }
 
-    public List<TransportDto> findTransport(TransportStatus status){
-        Iterable<Transport> transportIterable = transportRepository.findAll();
-        List<TransportDto> transportDtoList = new ArrayList<>();
-        for(var transport: transportIterable){
-            if(transport.getStatus() == status){
-                transportDtoList.add(transportMapper.modelToDto(transport));
-            }
-        }
-        return transportDtoList;
+    private List<TransportDto> getAllTransport() {
+        return transportMapper.listModelToListDto(transportRepository.findAll());
     }
 
-    public void createTransport(TransportDto transportDto){
+    private List<TransportDto> getAllTransportByStatus(TransportStatus status) {
+        return transportMapper.listModelToListDto(transportRepository.findAllByStatus(status));
+    }
+
+    private List<TransportDto> getAllTransportByType(TransportType type) {
+        return transportMapper.listModelToListDto(transportRepository.findAllByType(type));
+    }
+
+    private List<TransportDto> getAllTransportByTypeAndStatus(TransportType type, TransportStatus status) {
+        return transportMapper.listModelToListDto(transportRepository.findAllByTypeAndStatus(type, status));
+    }
+
+    public void createTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.FREE);
         transportDto.setCondition(Condition.EXCELLENT);
-        ParkingNameDto parkingName = new ParkingNameDto();
-        parkingName.setName(transportDto.getParking().getName());
-        transportDto.setParking(null);
         Transport transport = transportRepository.save(transportMapper.dtoToModel(transportDto));
-        transportDto.setParking(parkingName);
-        if(transport.getType() == TransportType.BICYCLE){
-            transport.setIdentificationNumber("ВЕЛ-" + transport.getId());
-        }
-        else
-        {
-            transport.setIdentificationNumber("ЭСМ-" + transport.getId());
+
+        String ident = transport.getType() == TransportType.BICYCLE ?
+                "ВЕЛ-" + transport.getId() :
+                "ЭСМ-" + transport.getId();
+        transport.setIdentificationNumber(ident);
+        if (transport.getType() == TransportType.SCOOTER) {
             transport.setChargePercentage(100L);
             transport.setMaxSpeed(25L);
         }
-        Optional<Parking> parkingOptional = parkingRepository.findById(Long.parseLong(transportDto.getParking().getName()));
-        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), transportDto.getParking().getName()));
-        parking.getTransports().add(transport);
+
+        Optional<Parking> parkingOptional = parkingRepository.findByName(transportDto.getParking().getName());
+        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
+                ErrorCodeEnum.PARKING_NOT_FOUND,
+                new Throwable(),
+                transportDto.getParking().getName()));
+
         transport.setCoordinates(parking.getCoordinates());
         transport.setParking(parking);
+        parking.getTransports().add(transport);
 
         transportRepository.save(transport);
         parkingRepository.save(parking);
     }
 
-    public void deleteTransport(TransportDto transportDto){
+    public void deleteTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.UNAVAILABLE);
         transportRepository.save(transportMapper.dtoToModel(transportDto));
     }
