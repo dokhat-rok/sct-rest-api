@@ -22,13 +22,6 @@ public class TripController {
 
     private final TripService tripService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<RentDto>> getAllRent() {
-        List<RentDto> rents = tripService.getAllRent();
-        log.info("Get all rents count {}", rents.size());
-        return ResponseEntity.ok(rents);
-    }
-
     @PostMapping("/begin")
     public ResponseEntity<RentDto> beginTrip(@RequestBody TripBeginDto tripBegin) {
         RentDto rent = tripService.beginRent(tripBegin);

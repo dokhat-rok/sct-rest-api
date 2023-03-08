@@ -55,10 +55,6 @@ public class TripService {
     @Value("${pricePerMinuteForScooter}")
     private BigDecimal pricePerMinuteForScooter;
 
-    public List<RentDto> getAllRent() {
-        return rentMapper.listModelToListDto(rentRepository.findAll());
-    }
-
     public RentDto beginRent(TripBeginDto tripBegin) {
         Customer customer = this.getCustomer();
         Parking parking = this.getParking(tripBegin.getParkingId());
