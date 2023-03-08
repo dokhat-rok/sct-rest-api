@@ -1,22 +1,19 @@
-package com.sct.rest.api.model.dto.parking;
+package com.sct.rest.api.model.dto.trip;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddTransportDto {
+public class TripBeginDto {
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Id парковки не может быть пустым")
     private Long parkingId;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Id транспорта не может быть пустым")
     private Long transportId;
 }

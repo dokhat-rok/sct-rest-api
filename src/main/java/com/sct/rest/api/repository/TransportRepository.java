@@ -1,10 +1,20 @@
 package com.sct.rest.api.repository;
 
 import com.sct.rest.api.model.entity.Transport;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import com.sct.rest.api.model.enums.TransportStatus;
+import com.sct.rest.api.model.enums.TransportType;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransportRepository extends CrudRepository<Transport, Long>{
-    @Query("select t from Transport t where t.identificationNumber = :identificationNumber")
-    Transport findByIdentificationNumber(String identificationNumber);
+import java.util.List;
+import java.util.Optional;
+
+public interface TransportRepository extends JpaRepository<Transport, Long> {
+
+    Optional<Transport> findByIdentificationNumber(String identificationNumber);
+
+    List<Transport> findAllByType(TransportType type);
+
+    List<Transport> findAllByStatus(TransportStatus status);
+
+    List<Transport> findAllByTypeAndStatus(TransportType type, TransportStatus status);
 }
