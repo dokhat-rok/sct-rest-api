@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transport")
+@RequestMapping("/v1/transport")
 @Validated
 @RequiredArgsConstructor
 @Slf4j

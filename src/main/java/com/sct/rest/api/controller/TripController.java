@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/trip")
+@RequestMapping("/v1/trip")
 @Validated
 @RequiredArgsConstructor
 @Slf4j

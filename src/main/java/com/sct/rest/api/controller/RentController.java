@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rent")
+@RequestMapping("/v1/rent")
 @RequiredArgsConstructor
 @Slf4j
 public class RentController {
