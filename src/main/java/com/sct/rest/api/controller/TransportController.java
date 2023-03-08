@@ -20,17 +20,10 @@ public class TransportController {
 
     private final TransportService transportService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<TransportDto>> getAllTransports() {
-        List<TransportDto> transports = transportService.getAllTransport();
+    @GetMapping("/all/filter")
+    public ResponseEntity<List<TransportDto>> getAllTransports(@RequestParam TransportFilter filter) {
+        List<TransportDto> transports = transportService.getAllTransportByFilter(filter);
         log.info("Get transport count: {}", transports.size());
-        return ResponseEntity.ok(transports);
-    }
-
-    @GetMapping("/find")
-    public ResponseEntity<List<TransportDto>> findTransports(@RequestBody TransportFilter filter) {
-        List<TransportDto> transports = transportService.findTransport(filter.getType(), filter.getStatus());
-        log.info("Find transport count: {} by filter {}", transports.size(), filter);
         return ResponseEntity.ok(transports);
     }
 

@@ -1,8 +1,8 @@
 package com.sct.rest.api.controller.handler;
 
 import com.sct.rest.api.model.dto.error.ErrorDto;
-import com.sct.rest.api.service.ErrorCodeEnum;
-import com.sct.rest.api.service.ServiceRuntimeException;
+import com.sct.rest.api.exception.enums.ErrorCodeEnum;
+import com.sct.rest.api.exception.ServiceRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

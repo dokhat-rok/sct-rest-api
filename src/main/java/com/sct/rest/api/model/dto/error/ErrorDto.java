@@ -1,6 +1,6 @@
 package com.sct.rest.api.model.dto.error;
 
-import com.sct.rest.api.service.ErrorCodeEnum;
+import com.sct.rest.api.exception.enums.ErrorCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
