@@ -28,9 +28,9 @@ public class TripController {
     }
 
     @PutMapping("/end")
-    public ResponseEntity<Void> endTrip(@RequestBody TripEndDto tripEnd) {
-        tripService.endRent(tripEnd);
+    public ResponseEntity<RentDto> endTrip(@RequestBody TripEndDto tripEnd) {
+        RentDto rent = tripService.endRent(tripEnd);
         log.info("Customer {} end rent id {}", SecurityContext.get().getCustomerLogin(), tripEnd.getRentId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(rent);
     }
 }

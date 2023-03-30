@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sct.rest.api.model.enums.RentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder(toBuilder = true)
@@ -24,9 +25,11 @@ public class RentDto {
     private CustomerDto customer;
 
     @NotNull
-    private Timestamp beginTimeRent;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private ZonedDateTime beginTimeRent;
 
-    private Timestamp endTimeRent;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private ZonedDateTime endTimeRent;
 
     @Valid
     private ParkingDto beginParking;

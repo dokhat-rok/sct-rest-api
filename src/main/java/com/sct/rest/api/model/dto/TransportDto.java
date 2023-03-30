@@ -1,6 +1,6 @@
 package com.sct.rest.api.model.dto;
 
-import com.sct.rest.api.model.dto.transport.ParkingNameDto;
+import com.sct.rest.api.model.dto.transport.ParkingForTransportDto;
 import com.sct.rest.api.model.enums.Condition;
 import com.sct.rest.api.model.enums.TransportStatus;
 import com.sct.rest.api.model.enums.TransportType;
@@ -34,5 +34,5 @@ public class TransportDto {
 
     private Long maxSpeed;
 
-    private ParkingNameDto parking;
+    private ParkingForTransportDto parking;
 }

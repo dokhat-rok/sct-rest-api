@@ -5,10 +5,12 @@ import com.sct.rest.api.model.dto.transport.TransportFilter;
 import com.sct.rest.api.service.TransportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -20,8 +22,8 @@ public class TransportController {
 
     private final TransportService transportService;
 
-    @GetMapping("/all/filter")
-    public ResponseEntity<List<TransportDto>> getAllTransports(@RequestParam TransportFilter filter) {
+    @GetMapping(value = "/all/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TransportDto>> getAllTransports(@NotNull TransportFilter filter) {
         List<TransportDto> transports = transportService.getAllTransportByFilter(filter);
         log.info("Get transport count: {}", transports.size());
         return ResponseEntity.ok(transports);
