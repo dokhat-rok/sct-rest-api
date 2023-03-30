@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/v1/customer")
 @Validated
 @RequiredArgsConstructor
 @Slf4j

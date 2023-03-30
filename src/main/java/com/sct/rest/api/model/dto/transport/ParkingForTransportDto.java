@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParkingNameDto {
+public class ParkingForTransportDto {
+
+    private Long id;
 
     private String name;
 

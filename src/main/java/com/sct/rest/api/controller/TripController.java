@@ -11,23 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/trip")
+@RequestMapping("/v1/trip")
 @Validated
 @RequiredArgsConstructor
 @Slf4j
 public class TripController {
 
     private final TripService tripService;
-
-    @GetMapping("/all")
-    public ResponseEntity<List<RentDto>> getAllRent() {
-        List<RentDto> rents = tripService.getAllRent();
-        log.info("Get all rents count {}", rents.size());
-        return ResponseEntity.ok(rents);
-    }
 
     @PostMapping("/begin")
     public ResponseEntity<RentDto> beginTrip(@RequestBody TripBeginDto tripBegin) {
@@ -37,9 +28,9 @@ public class TripController {
     }
 
     @PutMapping("/end")
-    public ResponseEntity<Void> endTrip(@RequestBody TripEndDto tripEnd) {
-        tripService.endRent(tripEnd);
+    public ResponseEntity<RentDto> endTrip(@RequestBody TripEndDto tripEnd) {
+        RentDto rent = tripService.endRent(tripEnd);
         log.info("Customer {} end rent id {}", SecurityContext.get().getCustomerLogin(), tripEnd.getRentId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(rent);
     }
 }

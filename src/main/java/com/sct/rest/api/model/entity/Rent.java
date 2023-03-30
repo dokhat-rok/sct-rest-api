@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table
@@ -31,10 +32,10 @@ public class Rent {
     private Transport transport;
 
     @Column(name = "begin_time_rent")
-    private Timestamp beginTimeRent;
+    private ZonedDateTime beginTimeRent;
 
     @Column(name = "end_time_rent")
-    private Timestamp endTimeRent;
+    private ZonedDateTime endTimeRent;
 
     @ManyToOne
     @JoinColumn(name = "id_begin_parking")
