@@ -5,6 +5,7 @@ import com.sct.rest.api.model.enums.TransportType;
 import com.sct.rest.api.service.PriceService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,14 @@ public class PriceServiceImpl implements PriceService {
                         .init(initialPriceForScooter.longValue())
                         .perMinute(pricePerMinuteForScooter.longValue())
                         .build();
+    }
+
+    @Override
+    @CachePut(key = "#type")
+    public PriceDto setPrice(TransportType type, PriceDto price) {
+        PriceDto actualPrice = this.getActualPrice(type);
+        if(price.getInit() != null) actualPrice.setInit(price.getInit());
+        if(price.getPerMinute() != null) actualPrice.setPerMinute(price.getPerMinute());
+        return actualPrice;
     }
 }

@@ -15,4 +15,13 @@ public interface PriceService {
      * @return Объект типа {@link PriceDto}
      */
     PriceDto getActualPrice(TransportType type);
+
+    /**
+     * Обновление цены аренды транспорта по его типу
+     *
+     * @param type Тип транспорта {@link TransportType}
+     * @param price Обновленная цена аренды транспорта {@link PriceDto}
+     * @return Объект типа {@link PriceDto}
+     */
+    PriceDto setPrice(TransportType type, PriceDto price);
 }
