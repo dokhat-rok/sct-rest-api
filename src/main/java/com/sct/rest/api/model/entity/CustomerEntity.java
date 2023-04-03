@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "customer")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_customer")

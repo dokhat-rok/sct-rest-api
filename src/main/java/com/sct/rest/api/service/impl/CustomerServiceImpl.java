@@ -2,9 +2,9 @@ package com.sct.rest.api.service.impl;
 
 import com.sct.rest.api.exception.ServiceRuntimeException;
 import com.sct.rest.api.exception.enums.ErrorCodeEnum;
-import com.sct.rest.api.mapper.user.CustomerMapper;
+import com.sct.rest.api.mapper.customer.CustomerMapper;
 import com.sct.rest.api.model.dto.CustomerDto;
-import com.sct.rest.api.model.entity.Customer;
+import com.sct.rest.api.model.entity.CustomerEntity;
 import com.sct.rest.api.repository.CustomerRepository;
 import com.sct.rest.api.repository.RentRepository;
 import com.sct.rest.api.security.SecurityContext;
@@ -26,8 +26,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto getUserById(Long id) {
-        Optional<Customer> userOptional = customerRepository.findById(id);
-        Customer customer = userOptional
+        Optional<CustomerEntity> userOptional = customerRepository.findById(id);
+        CustomerEntity customer = userOptional
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), id));
         return customerMapper.modelToDto(customer);
     }
@@ -41,8 +41,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto getUserByLogin(String login) {
-        Optional<Customer> userOptional = customerRepository.findByLogin(login);
-        Customer customer = userOptional
+        Optional<CustomerEntity> userOptional = customerRepository.findByLogin(login);
+        CustomerEntity customer = userOptional
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), login));
         return customerMapper.modelToDto(customer);
     }
