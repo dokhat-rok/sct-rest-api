@@ -7,10 +7,10 @@ import com.sct.rest.api.model.dto.PriceDto;
 import com.sct.rest.api.model.dto.RentDto;
 import com.sct.rest.api.model.dto.trip.TripBeginDto;
 import com.sct.rest.api.model.dto.trip.TripEndDto;
-import com.sct.rest.api.model.entity.Customer;
-import com.sct.rest.api.model.entity.Parking;
-import com.sct.rest.api.model.entity.Rent;
-import com.sct.rest.api.model.entity.Transport;
+import com.sct.rest.api.model.entity.CustomerEntity;
+import com.sct.rest.api.model.entity.ParkingEntity;
+import com.sct.rest.api.model.entity.RentEntity;
+import com.sct.rest.api.model.entity.TransportEntity;
 import com.sct.rest.api.model.enums.RentStatus;
 import com.sct.rest.api.model.enums.TransportStatus;
 import com.sct.rest.api.model.enums.TransportType;
@@ -45,9 +45,9 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public RentDto beginRent(TripBeginDto tripBegin) {
-        Customer customer = this.getCustomer();
-        Parking parking = this.getParking(tripBegin.getParkingId());
-        Transport transport = this.getTransport(tripBegin.getTransportId());
+        CustomerEntity customer = this.getCustomer();
+        ParkingEntity parking = this.getParking(tripBegin.getParkingId());
+        TransportEntity transport = this.getTransport(tripBegin.getTransportId());
         PriceDto price = priceService.getActualPrice(transport.getType());
 
         if (transport.getParking() != null && transport.getStatus() == TransportStatus.FREE) {
@@ -71,7 +71,7 @@ public class TripServiceImpl implements TripService {
         transport.setStatus(TransportStatus.BUSY);
         customer.setBalance(customer.getBalance() - price.getInit());
 
-        Rent rent = Rent.builder()
+        RentEntity rent = RentEntity.builder()
                 .customer(customer)
                 .transport(transport)
                 .beginTimeRent(ZonedDateTime.now())
@@ -89,10 +89,10 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public RentDto endRent(TripEndDto tripEnd) {
-        Customer customer = this.getCustomer();
-        Parking parking = this.getParking(tripEnd.getParkingId());
-        Transport transport = this.getTransport(tripEnd.getTransportId());
-        Rent rent = this.getRent(tripEnd.getRentId());
+        CustomerEntity customer = this.getCustomer();
+        ParkingEntity parking = this.getParking(tripEnd.getParkingId());
+        TransportEntity transport = this.getTransport(tripEnd.getTransportId());
+        RentEntity rent = this.getRent(tripEnd.getRentId());
         PriceDto price = priceService.getActualPrice(transport.getType());
 
         if (rent.getStatus() == RentStatus.CLOSE)
@@ -122,7 +122,7 @@ public class TripServiceImpl implements TripService {
         return rentMapper.modelToDto(rent);
     }
 
-    private Customer getCustomer() {
+    private CustomerEntity getCustomer() {
         return customerRepository
                 .findByLogin(SecurityContext.get().getCustomerLogin())
                 .orElseThrow(() -> new ServiceRuntimeException(
@@ -131,19 +131,19 @@ public class TripServiceImpl implements TripService {
                         SecurityContext.get().getCustomerLogin()));
     }
 
-    private Parking getParking(Long id) {
+    private ParkingEntity getParking(Long id) {
         return parkingRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), id));
     }
 
-    private Transport getTransport(Long id) {
+    private TransportEntity getTransport(Long id) {
         return transportRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), id));
     }
 
-    private Rent getRent(Long id) {
+    private RentEntity getRent(Long id) {
         return rentRepository
                 .findById(id)
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.RENT_NOT_FOUND, new Throwable(), id));

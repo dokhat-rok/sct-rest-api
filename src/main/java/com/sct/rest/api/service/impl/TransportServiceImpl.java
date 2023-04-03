@@ -5,8 +5,8 @@ import com.sct.rest.api.exception.enums.ErrorCodeEnum;
 import com.sct.rest.api.mapper.transport.TransportMapper;
 import com.sct.rest.api.model.dto.TransportDto;
 import com.sct.rest.api.model.dto.transport.TransportFilter;
-import com.sct.rest.api.model.entity.Parking;
-import com.sct.rest.api.model.entity.Transport;
+import com.sct.rest.api.model.entity.ParkingEntity;
+import com.sct.rest.api.model.entity.TransportEntity;
 import com.sct.rest.api.model.enums.Condition;
 import com.sct.rest.api.model.enums.TransportStatus;
 import com.sct.rest.api.model.enums.TransportType;
@@ -57,7 +57,7 @@ public class TransportServiceImpl implements TransportService {
     public void createTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.FREE);
         transportDto.setCondition(Condition.EXCELLENT);
-        Transport transport = transportRepository.save(transportMapper.dtoToModel(transportDto));
+        TransportEntity transport = transportRepository.save(transportMapper.dtoToModel(transportDto));
 
         String ident = transport.getType() == TransportType.BICYCLE ?
                 "ВЕЛ-" + transport.getId() :
@@ -68,8 +68,8 @@ public class TransportServiceImpl implements TransportService {
             transport.setMaxSpeed(25L);
         }
 
-        Optional<Parking> parkingOptional = parkingRepository.findByName(transportDto.getParking().getName());
-        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
+        Optional<ParkingEntity> parkingOptional = parkingRepository.findByName(transportDto.getParking().getName());
+        ParkingEntity parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
                 ErrorCodeEnum.PARKING_NOT_FOUND,
                 new Throwable(),
                 transportDto.getParking().getName()));

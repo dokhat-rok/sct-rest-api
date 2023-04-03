@@ -1,11 +1,11 @@
 package com.sct.rest.api.repository;
 
-import com.sct.rest.api.model.entity.Parking;
+import com.sct.rest.api.model.entity.ParkingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ParkingRepository extends JpaRepository<Parking, Long> {
+public interface ParkingRepository extends JpaRepository<ParkingEntity, Long> {
 
-    Optional<Parking> findByName(String parkingName);
+    Optional<ParkingEntity> findByName(String parkingName);
 }

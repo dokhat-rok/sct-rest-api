@@ -12,12 +12,12 @@ import java.util.List;
 
 
 @Entity
-@Table
+@Table(name = "parking")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Parking {
+public class ParkingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_parking")
@@ -36,6 +36,6 @@ public class Parking {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_parking")
-    private List<Transport> transports = new ArrayList<>();
+    private List<TransportEntity> transports = new ArrayList<>();
 
 }

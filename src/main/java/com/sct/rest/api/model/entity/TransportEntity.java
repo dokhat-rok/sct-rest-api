@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "transport")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transport {
+public class TransportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_transport")
@@ -25,7 +25,7 @@ public class Transport {
 
     @ManyToOne
     @JoinColumn(name = "id_parking")
-    private Parking parking;
+    private ParkingEntity parking;
 
     @Enumerated(EnumType.STRING)
     private TransportType type;

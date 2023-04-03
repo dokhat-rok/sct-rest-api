@@ -1,11 +1,11 @@
 package com.sct.rest.api.repository;
 
-import com.sct.rest.api.model.entity.Customer;
+import com.sct.rest.api.model.entity.CustomerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
-    Optional<Customer> findByLogin(String login);
+    Optional<CustomerEntity> findByLogin(String login);
 }

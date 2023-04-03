@@ -5,8 +5,8 @@ import com.sct.rest.api.exception.enums.ErrorCodeEnum;
 import com.sct.rest.api.mapper.parking.ParkingMapper;
 import com.sct.rest.api.model.dto.ParkingDto;
 import com.sct.rest.api.model.dto.parking.AddTransportDto;
-import com.sct.rest.api.model.entity.Parking;
-import com.sct.rest.api.model.entity.Transport;
+import com.sct.rest.api.model.entity.ParkingEntity;
+import com.sct.rest.api.model.entity.TransportEntity;
 import com.sct.rest.api.repository.ParkingRepository;
 import com.sct.rest.api.repository.TransportRepository;
 import com.sct.rest.api.service.ParkingService;
@@ -39,27 +39,27 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public void updateParking(ParkingDto parkingDto) {
-        List<Transport> transportList = new ArrayList<>();
+        List<TransportEntity> transportList = new ArrayList<>();
         for (var transport : parkingDto.getTransports()) {
-            Optional<Transport> transportOpt = transportRepository
+            Optional<TransportEntity> transportOpt = transportRepository
                     .findByIdentificationNumber(transport.getIdentificationNumber());
             transportOpt.ifPresent(transportList::add);
         }
-        Parking parking = parkingMapper.dtoToModel(parkingDto);
+        ParkingEntity parking = parkingMapper.dtoToModel(parkingDto);
         parking.setTransports(transportList);
         parkingRepository.save(parking);
     }
 
     @Override
     public void addTransport(AddTransportDto addTransport) {
-        Optional<Parking> parkingOptional = parkingRepository.findById(addTransport.getParkingId());
-        Optional<Transport> transportOptional = transportRepository.findById(addTransport.getTransportId());
+        Optional<ParkingEntity> parkingOptional = parkingRepository.findById(addTransport.getParkingId());
+        Optional<TransportEntity> transportOptional = transportRepository.findById(addTransport.getTransportId());
 
-        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
+        ParkingEntity parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
                 ErrorCodeEnum.PARKING_NOT_FOUND,
                 new Throwable(),
                 addTransport.getParkingId()));
-        Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(
+        TransportEntity transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(
                 ErrorCodeEnum.TRANSPORT_NOT_FOUND,
                 new Throwable(),
                 addTransport.getTransportId()));
