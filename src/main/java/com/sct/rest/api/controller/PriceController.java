@@ -6,10 +6,7 @@ import com.sct.rest.api.service.PriceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/price")
@@ -24,5 +21,12 @@ public class PriceController {
         PriceDto price = priceService.getActualPrice(type);
         log.info("Get actual price: {}", price);
         return ResponseEntity.ok(price);
+    }
+
+    @PutMapping("/{type}")
+    public ResponseEntity<PriceDto> setPrice(@PathVariable TransportType type, @RequestBody PriceDto price) {
+        PriceDto actualPrice = priceService.setPrice(type, price);
+        log.info("Set actual price: {}", actualPrice);
+        return ResponseEntity.ok(actualPrice);
     }
 }
