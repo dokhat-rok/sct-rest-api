@@ -7,10 +7,16 @@ import com.sct.rest.api.model.dto.ParkingDto;
 import com.sct.rest.api.model.dto.parking.AddTransportDto;
 import com.sct.rest.api.model.entity.ParkingEntity;
 import com.sct.rest.api.model.entity.TransportEntity;
+import com.sct.rest.api.model.enums.ParkingType;
+import com.sct.rest.api.model.filter.ParkingPageableFilter;
 import com.sct.rest.api.repository.ParkingRepository;
 import com.sct.rest.api.repository.TransportRepository;
 import com.sct.rest.api.service.ParkingService;
+import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -75,5 +81,15 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public void deleteParking(ParkingDto parkingDto) {
         parkingRepository.delete(parkingMapper.dtoToModel(parkingDto));
+    }
+
+    @Override
+    public Page<ParkingDto> getAllParkingFilterAndPageable(ParkingPageableFilter filter) {
+        ParkingType type = EnumConverter.stringToEnum(ParkingType.class, filter.getType());
+        Page<ParkingEntity> entityPage = parkingRepository
+                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type);
+        return new PageImpl<>(parkingMapper.listModelToListDto(entityPage.getContent()),
+                entityPage.getPageable(),
+                entityPage.getTotalElements());
     }
 }

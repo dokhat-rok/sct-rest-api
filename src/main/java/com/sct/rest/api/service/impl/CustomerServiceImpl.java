@@ -5,11 +5,18 @@ import com.sct.rest.api.exception.enums.ErrorCodeEnum;
 import com.sct.rest.api.mapper.customer.CustomerMapper;
 import com.sct.rest.api.model.dto.CustomerDto;
 import com.sct.rest.api.model.entity.CustomerEntity;
+import com.sct.rest.api.model.enums.Role;
+import com.sct.rest.api.model.filter.CustomerPageableFilter;
 import com.sct.rest.api.repository.CustomerRepository;
 import com.sct.rest.api.repository.RentRepository;
 import com.sct.rest.api.security.SecurityContext;
 import com.sct.rest.api.service.CustomerService;
+import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -45,5 +52,15 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerEntity customer = userOptional
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), login));
         return customerMapper.modelToDto(customer);
+    }
+
+    @Override
+    public Page<CustomerDto> getAllCustomerFilterAndPageable(CustomerPageableFilter filter) {
+        Role role = EnumConverter.stringToEnum(Role.class, filter.getRole());
+        Page<CustomerEntity> entityPage = customerRepository
+                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getLogin(), role);
+        return new PageImpl<>(customerMapper.listModelToListDto(entityPage.getContent()),
+                entityPage.getPageable(),
+                entityPage.getTotalElements());
     }
 }
