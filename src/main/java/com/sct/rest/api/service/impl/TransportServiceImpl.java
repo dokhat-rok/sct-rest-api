@@ -10,10 +10,15 @@ import com.sct.rest.api.model.entity.TransportEntity;
 import com.sct.rest.api.model.enums.Condition;
 import com.sct.rest.api.model.enums.TransportStatus;
 import com.sct.rest.api.model.enums.TransportType;
+import com.sct.rest.api.model.filter.TransportPageableFilter;
 import com.sct.rest.api.repository.ParkingRepository;
 import com.sct.rest.api.repository.TransportRepository;
 import com.sct.rest.api.service.TransportService;
+import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -86,6 +91,21 @@ public class TransportServiceImpl implements TransportService {
     public void deleteTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.UNAVAILABLE);
         transportRepository.save(transportMapper.dtoToModel(transportDto));
+    }
+
+    @Override
+    public Page<TransportDto> getAllTransportFilterAndPageable(TransportPageableFilter filter) {
+        Condition condition = EnumConverter.stringToEnum(Condition.class, filter.getCondition());
+        TransportStatus status = EnumConverter.stringToEnum(TransportStatus.class, filter.getStatus());
+        Page<TransportEntity> entityPage = transportRepository.findAllByFilter(
+                PageRequest.of(filter.getPage(), filter.getSize()),
+                filter.getIdentificationNumber(),
+                filter.getParkingName(),
+                condition,
+                status);
+        return new PageImpl<>(transportMapper.listModelToListDto(entityPage.getContent()),
+                entityPage.getPageable(),
+                entityPage.getTotalElements());
     }
 
     private List<TransportDto> getAllTransport() {

@@ -2,6 +2,8 @@ package com.sct.rest.api.service;
 
 import com.sct.rest.api.model.dto.ParkingDto;
 import com.sct.rest.api.model.dto.parking.AddTransportDto;
+import com.sct.rest.api.model.filter.ParkingPageableFilter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -44,4 +46,12 @@ public interface ParkingService {
      * @param parking Парковка для удаления
      */
     void deleteParking(ParkingDto parking);
+
+    /**
+     * Получение отфильтрованных страниц парковок
+     *
+     * @param filter Параметры фильтрации и пагинации парковок {@link ParkingPageableFilter}
+     * @return Отфильтрованная страница парковок {@link ParkingDto}
+     */
+    Page<ParkingDto> getAllParkingFilterAndPageable(ParkingPageableFilter filter);
 }

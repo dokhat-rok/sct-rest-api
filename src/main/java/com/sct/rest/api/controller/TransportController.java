@@ -2,9 +2,11 @@ package com.sct.rest.api.controller;
 
 import com.sct.rest.api.model.dto.TransportDto;
 import com.sct.rest.api.model.dto.transport.TransportFilter;
+import com.sct.rest.api.model.filter.TransportPageableFilter;
 import com.sct.rest.api.service.TransportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +29,13 @@ public class TransportController {
         List<TransportDto> transports = transportService.getAllTransportByFilter(filter);
         log.info("Get transport count: {}", transports.size());
         return ResponseEntity.ok(transports);
+    }
+
+    @GetMapping(value = "/all/pageable", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<TransportDto>> getAllTransportsFilterAndPageable(TransportPageableFilter filter) {
+        Page<TransportDto> page = transportService.getAllTransportFilterAndPageable(filter);
+        log.info("Get pageable transport: {}", page);
+        return ResponseEntity.ok(page);
     }
 
     @PostMapping

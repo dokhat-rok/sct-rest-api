@@ -2,6 +2,8 @@ package com.sct.rest.api.repository;
 
 import com.sct.rest.api.model.entity.RentEntity;
 import com.sct.rest.api.model.enums.RentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,4 +15,9 @@ public interface RentRepository extends JpaRepository<RentEntity, Long> {
     Long countRentByCustomerLogin(String login);
 
     List<RentEntity> findAllByCustomerLoginAndStatus(String login, RentStatus status);
+
+    @Query("select rent from RentEntity rent where (:login is null or rent.customer.login like %:login%) " +
+            "and (:transportIdent is null or rent.transport.identificationNumber like %:transportIdent%) " +
+            "and (:status is null or rent.status = :status)")
+    Page<RentEntity> findAllByFilter(Pageable pageable, String login, String transportIdent, RentStatus status);
 }
