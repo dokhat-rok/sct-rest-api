@@ -1,6 +1,8 @@
 package com.sct.rest.api.service;
 
 import com.sct.rest.api.model.dto.CustomerDto;
+import com.sct.rest.api.model.filter.CustomerPageableFilter;
+import org.springframework.data.domain.Page;
 
 /**
  * Сервис для работы с данными пользователей
@@ -29,4 +31,12 @@ public interface CustomerService {
      * @return Объект типа {@link CustomerDto}
      */
     CustomerDto getUserByLogin(String login);
+
+    /**
+     * Получение отфильтрованной страницы с пользователями
+     *
+     * @param filter Параметры фильтрации и пагинации пользователей {@link CustomerPageableFilter}
+     * @return Отфильтрованная страница с пользователями {@link CustomerDto}
+     */
+    Page<CustomerDto> getAllCustomerFilterAndPageable(CustomerPageableFilter filter);
 }
