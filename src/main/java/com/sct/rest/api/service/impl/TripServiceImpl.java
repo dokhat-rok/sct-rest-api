@@ -52,7 +52,6 @@ public class TripServiceImpl implements TripService {
 
         if (transport.getParking() != null && transport.getStatus() == TransportStatus.FREE) {
             if (customer.getBalance().intValue() < price.getInit() ||
-                    transport.getStatus() != TransportStatus.FREE ||
                     transport.getParking().getId().intValue() != parking.getId().intValue()) {
                 throw new ServiceRuntimeException(ErrorCodeEnum.NO_MONEY, new Throwable());
             }
@@ -140,7 +139,7 @@ public class TripServiceImpl implements TripService {
     private TransportEntity getTransport(Long id) {
         return transportRepository
                 .findById(id)
-                .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable(), id));
+                .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable(), id));
     }
 
     private RentEntity getRent(Long id) {
