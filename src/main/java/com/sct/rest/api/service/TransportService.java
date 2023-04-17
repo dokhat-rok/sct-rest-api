@@ -4,6 +4,7 @@ import com.sct.rest.api.model.dto.TransportDto;
 import com.sct.rest.api.model.dto.transport.TransportFilter;
 import com.sct.rest.api.model.filter.TransportPageableFilter;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public interface TransportService {
      *
      * @param transport Информация о новом транспорте
      */
+    @Transactional
     void createTransport(TransportDto transport);
 
     /**
@@ -32,6 +34,7 @@ public interface TransportService {
      *
      * @param transportDto Информация об удаляемом транспорте
      */
+    @Transactional
     void deleteTransport(TransportDto transportDto);
 
     /**
