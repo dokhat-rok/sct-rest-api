@@ -54,7 +54,7 @@ public class ParkingController {
     @PutMapping("/add/transport")
     public ResponseEntity<Void> addTransport(@RequestBody AddTransportDto addTransport) {
         parkingService.addTransport(addTransport);
-        log.info("Add transport {} to parking {}", addTransport.getTransportId(), addTransport.getParkingId());
+        log.info("Add transport {} to parking {}", addTransport.getTransportIdent(), addTransport.getParkingName());
         return ResponseEntity.ok().build();
     }
 
