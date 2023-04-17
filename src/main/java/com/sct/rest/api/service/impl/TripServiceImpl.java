@@ -84,7 +84,7 @@ public class TripServiceImpl implements TripService {
         transportRepository.save(transport);
         rentRepository.save(rent);
 
-        return rentMapper.modelToDto(rent);
+        return rentMapper.toDto(rent);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class TripServiceImpl implements TripService {
         transportRepository.save(transport);
         rentRepository.save(rent);
 
-        return rentMapper.modelToDto(rent);
+        return rentMapper.toDto(rent);
     }
 
     private CustomerEntity getCustomer() {

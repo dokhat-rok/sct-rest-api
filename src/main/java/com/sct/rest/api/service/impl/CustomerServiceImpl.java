@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<CustomerEntity> userOptional = customerRepository.findById(id);
         CustomerEntity customer = userOptional
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), id));
-        return customerMapper.modelToDto(customer);
+        return customerMapper.toDto(customer);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<CustomerEntity> userOptional = customerRepository.findByLogin(login);
         CustomerEntity customer = userOptional
                 .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), login));
-        return customerMapper.modelToDto(customer);
+        return customerMapper.toDto(customer);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
         Role role = EnumConverter.stringToEnum(Role.class, filter.getRole());
         Page<CustomerEntity> entityPage = customerRepository
                 .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getLogin(), role);
-        return new PageImpl<>(customerMapper.listModelToListDto(entityPage.getContent()),
+        return new PageImpl<>(customerMapper.toListDto(entityPage.getContent()),
                 entityPage.getPageable(),
                 entityPage.getTotalElements());
     }

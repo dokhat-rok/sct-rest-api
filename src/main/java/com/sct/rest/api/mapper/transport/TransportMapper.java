@@ -10,9 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = ParkingNameMapper.class)
 public interface TransportMapper {
 
-    TransportEntity dtoToModel(TransportDto transportDto);
+    TransportEntity toModel(TransportDto transportDto);
 
-    TransportDto modelToDto(TransportEntity transport);
-
-    List<TransportDto> listModelToListDto(List<TransportEntity> transportList);
+    List<TransportDto> toListDto(List<TransportEntity> transportList);
 }

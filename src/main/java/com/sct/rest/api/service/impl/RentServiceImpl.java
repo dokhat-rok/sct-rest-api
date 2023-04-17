@@ -27,13 +27,13 @@ public class RentServiceImpl implements RentService {
 
     @Override
     public List<RentDto> getAllRent() {
-        return rentMapper.listModelToListDto(rentRepository.findAll());
+        return rentMapper.toListDto(rentRepository.findAll());
     }
 
     @Override
     public List<RentDto> getAllRentForCurrentUserByStatus(RentStatus status) {
         return rentMapper
-                .listModelToListDto(rentRepository
+                .toListDto(rentRepository
                         .findAllByCustomerLoginAndStatus(SecurityContext.get().getCustomerLogin(), status));
     }
 
@@ -44,7 +44,7 @@ public class RentServiceImpl implements RentService {
                 PageRequest.of(filter.getPage(), filter.getSize()),
                 filter.getLogin(),
                 filter.getTransportIdent(), status);
-        return new PageImpl<>(rentMapper.listModelToListDto(entityPage.getContent()),
+        return new PageImpl<>(rentMapper.toListDto(entityPage.getContent()),
                 entityPage.getPageable(),
                 entityPage.getTotalElements());
     }

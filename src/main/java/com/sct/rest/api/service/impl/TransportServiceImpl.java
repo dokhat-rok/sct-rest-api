@@ -62,7 +62,7 @@ public class TransportServiceImpl implements TransportService {
     public void createTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.FREE);
         transportDto.setCondition(Condition.EXCELLENT);
-        TransportEntity transport = transportRepository.save(transportMapper.dtoToModel(transportDto));
+        TransportEntity transport = transportRepository.save(transportMapper.toModel(transportDto));
 
         String ident = transport.getType() == TransportType.BICYCLE ?
                 "ВЕЛ-" + transport.getId() :
@@ -90,7 +90,7 @@ public class TransportServiceImpl implements TransportService {
     @Override
     public void deleteTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.UNAVAILABLE);
-        transportRepository.save(transportMapper.dtoToModel(transportDto));
+        transportRepository.save(transportMapper.toModel(transportDto));
     }
 
     @Override
@@ -103,24 +103,24 @@ public class TransportServiceImpl implements TransportService {
                 filter.getParkingName(),
                 condition,
                 status);
-        return new PageImpl<>(transportMapper.listModelToListDto(entityPage.getContent()),
+        return new PageImpl<>(transportMapper.toListDto(entityPage.getContent()),
                 entityPage.getPageable(),
                 entityPage.getTotalElements());
     }
 
     private List<TransportDto> getAllTransport() {
-        return transportMapper.listModelToListDto(transportRepository.findAll());
+        return transportMapper.toListDto(transportRepository.findAll());
     }
 
     private List<TransportDto> getAllTransportByStatus(TransportStatus status) {
-        return transportMapper.listModelToListDto(transportRepository.findAllByStatus(status));
+        return transportMapper.toListDto(transportRepository.findAllByStatus(status));
     }
 
     private List<TransportDto> getAllTransportByType(TransportType type) {
-        return transportMapper.listModelToListDto(transportRepository.findAllByType(type));
+        return transportMapper.toListDto(transportRepository.findAllByType(type));
     }
 
     private List<TransportDto> getAllTransportByTypeAndStatus(TransportType type, TransportStatus status) {
-        return transportMapper.listModelToListDto(transportRepository.findAllByTypeAndStatus(type, status));
+        return transportMapper.toListDto(transportRepository.findAllByTypeAndStatus(type, status));
     }
 }

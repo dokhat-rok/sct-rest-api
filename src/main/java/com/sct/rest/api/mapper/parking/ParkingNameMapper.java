@@ -8,5 +8,5 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ParkingNameMapper {
 
-    ParkingForTransportDto modelToDto(ParkingEntity parking);
+    ParkingForTransportDto toDto(ParkingEntity parking);
 }

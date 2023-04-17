@@ -35,12 +35,12 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public List<ParkingDto> getAllParking() {
-        return parkingMapper.listModelToListDto(parkingRepository.findAll());
+        return parkingMapper.toListDto(parkingRepository.findAll());
     }
 
     @Override
     public void createParking(ParkingDto parking) {
-        parkingRepository.save(parkingMapper.dtoToModel(parking));
+        parkingRepository.save(parkingMapper.toModel(parking));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ParkingServiceImpl implements ParkingService {
                     .findByIdentificationNumber(transport.getIdentificationNumber());
             transportOpt.ifPresent(transportList::add);
         }
-        ParkingEntity parking = parkingMapper.dtoToModel(parkingDto);
+        ParkingEntity parking = parkingMapper.toModel(parkingDto);
         parking.setTransports(transportList);
         parkingRepository.save(parking);
     }
@@ -80,7 +80,7 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public void deleteParking(ParkingDto parkingDto) {
-        parkingRepository.delete(parkingMapper.dtoToModel(parkingDto));
+        parkingRepository.delete(parkingMapper.toModel(parkingDto));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ParkingServiceImpl implements ParkingService {
         ParkingType type = EnumConverter.stringToEnum(ParkingType.class, filter.getType());
         Page<ParkingEntity> entityPage = parkingRepository
                 .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type);
-        return new PageImpl<>(parkingMapper.listModelToListDto(entityPage.getContent()),
+        return new PageImpl<>(parkingMapper.toListDto(entityPage.getContent()),
                 entityPage.getPageable(),
                 entityPage.getTotalElements());
     }
