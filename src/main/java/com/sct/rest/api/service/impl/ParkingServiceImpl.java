@@ -15,7 +15,6 @@ import com.sct.rest.api.service.ParkingService;
 import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +34,12 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public List<ParkingDto> getAllParking() {
-        return parkingMapper.listModelToListDto(parkingRepository.findAll());
+        return parkingMapper.toListDto(parkingRepository.findAll());
     }
 
     @Override
     public void createParking(ParkingDto parking) {
-        parkingRepository.save(parkingMapper.dtoToModel(parking));
+        parkingRepository.save(parkingMapper.toModel(parking));
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ParkingServiceImpl implements ParkingService {
                     .findByIdentificationNumber(transport.getIdentificationNumber());
             transportOpt.ifPresent(transportList::add);
         }
-        ParkingEntity parking = parkingMapper.dtoToModel(parkingDto);
+        ParkingEntity parking = parkingMapper.toModel(parkingDto);
         parking.setTransports(transportList);
         parkingRepository.save(parking);
     }
@@ -80,16 +79,14 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public void deleteParking(ParkingDto parkingDto) {
-        parkingRepository.delete(parkingMapper.dtoToModel(parkingDto));
+        parkingRepository.delete(parkingMapper.toModel(parkingDto));
     }
 
     @Override
     public Page<ParkingDto> getAllParkingFilterAndPageable(ParkingPageableFilter filter) {
         ParkingType type = EnumConverter.stringToEnum(ParkingType.class, filter.getType());
-        Page<ParkingEntity> entityPage = parkingRepository
-                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type);
-        return new PageImpl<>(parkingMapper.listModelToListDto(entityPage.getContent()),
-                entityPage.getPageable(),
-                entityPage.getTotalElements());
+        return parkingRepository
+                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type)
+                .map(parkingMapper::toDto);
     }
 }

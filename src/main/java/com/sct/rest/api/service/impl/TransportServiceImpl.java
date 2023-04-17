@@ -17,7 +17,6 @@ import com.sct.rest.api.service.TransportService;
 import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -36,33 +35,17 @@ public class TransportServiceImpl implements TransportService {
 
     @Override
     public List<TransportDto> getAllTransportByFilter(TransportFilter filter) {
-        TransportType type = null;
-        try {
-            type = TransportType.valueOf(filter.getType().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ServiceRuntimeException(ErrorCodeEnum.VALIDATION_ERROR, new Throwable());
-        } catch (NullPointerException ignored) {
-        }
+        TransportType type = EnumConverter.stringToEnum(TransportType.class, filter.getType());
+        TransportStatus status = EnumConverter.stringToEnum(TransportStatus.class, filter.getStatus());
 
-        TransportStatus status = null;
-        try {
-            status = TransportStatus.valueOf(filter.getStatus().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ServiceRuntimeException(ErrorCodeEnum.VALIDATION_ERROR, new Throwable());
-        } catch (NullPointerException ignored) {
-        }
-
-        if (status != null && type != null) return this.getAllTransportByTypeAndStatus(type, status);
-        if (status != null) return this.getAllTransportByStatus(status);
-        if (type != null) return this.getAllTransportByType(type);
-        return this.getAllTransport();
+        return transportMapper.toListDto(transportRepository.findAllByTypeAndStatus(type, status));
     }
 
     @Override
     public void createTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.FREE);
         transportDto.setCondition(Condition.EXCELLENT);
-        TransportEntity transport = transportRepository.save(transportMapper.dtoToModel(transportDto));
+        TransportEntity transport = transportRepository.save(transportMapper.toModel(transportDto));
 
         String ident = transport.getType() == TransportType.BICYCLE ?
                 "ВЕЛ-" + transport.getId() :
@@ -90,37 +73,19 @@ public class TransportServiceImpl implements TransportService {
     @Override
     public void deleteTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.UNAVAILABLE);
-        transportRepository.save(transportMapper.dtoToModel(transportDto));
+        transportRepository.save(transportMapper.toModel(transportDto));
     }
 
     @Override
     public Page<TransportDto> getAllTransportFilterAndPageable(TransportPageableFilter filter) {
         Condition condition = EnumConverter.stringToEnum(Condition.class, filter.getCondition());
         TransportStatus status = EnumConverter.stringToEnum(TransportStatus.class, filter.getStatus());
-        Page<TransportEntity> entityPage = transportRepository.findAllByFilter(
+        return transportRepository.findAllByFilter(
                 PageRequest.of(filter.getPage(), filter.getSize()),
                 filter.getIdentificationNumber(),
                 filter.getParkingName(),
                 condition,
-                status);
-        return new PageImpl<>(transportMapper.listModelToListDto(entityPage.getContent()),
-                entityPage.getPageable(),
-                entityPage.getTotalElements());
-    }
-
-    private List<TransportDto> getAllTransport() {
-        return transportMapper.listModelToListDto(transportRepository.findAll());
-    }
-
-    private List<TransportDto> getAllTransportByStatus(TransportStatus status) {
-        return transportMapper.listModelToListDto(transportRepository.findAllByStatus(status));
-    }
-
-    private List<TransportDto> getAllTransportByType(TransportType type) {
-        return transportMapper.listModelToListDto(transportRepository.findAllByType(type));
-    }
-
-    private List<TransportDto> getAllTransportByTypeAndStatus(TransportType type, TransportStatus status) {
-        return transportMapper.listModelToListDto(transportRepository.findAllByTypeAndStatus(type, status));
+                status)
+                .map(transportMapper::toDto);
     }
 }

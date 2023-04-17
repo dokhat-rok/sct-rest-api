@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RentMapper {
 
-    RentDto modelToDto(RentEntity rent);
+    RentDto toDto(RentEntity rent);
 
-    List<RentDto> listModelToListDto(List<RentEntity> rentList);
+    List<RentDto> toListDto(List<RentEntity> rentList);
 }

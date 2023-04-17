@@ -16,10 +16,9 @@ public interface TransportRepository extends JpaRepository<TransportEntity, Long
 
     Optional<TransportEntity> findByIdentificationNumber(String identificationNumber);
 
-    List<TransportEntity> findAllByType(TransportType type);
-
-    List<TransportEntity> findAllByStatus(TransportStatus status);
-
+    @Query("select transport from TransportEntity transport " +
+            "where (:type is null or transport.type = :type) " +
+            "and (:status is null or transport.status = :status)")
     List<TransportEntity> findAllByTypeAndStatus(TransportType type, TransportStatus status);
 
     @Query("select transport from TransportEntity transport " +

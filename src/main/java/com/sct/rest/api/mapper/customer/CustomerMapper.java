@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CustomerMapper {
 
-    CustomerDto modelToDto(CustomerEntity customer);
+    CustomerDto toDto(CustomerEntity customer);
 
-    List<CustomerDto> listModelToListDto(List<CustomerEntity> customerEntities);
+    List<CustomerDto> toListDto(List<CustomerEntity> customerEntities);
 }

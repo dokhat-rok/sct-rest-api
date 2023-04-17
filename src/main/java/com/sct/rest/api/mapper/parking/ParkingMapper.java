@@ -10,9 +10,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ParkingMapper {
 
-    ParkingEntity dtoToModel(ParkingDto parkingDto);
+    ParkingEntity toModel(ParkingDto parkingDto);
 
-    ParkingDto modelToDto(ParkingEntity parking);
+    ParkingDto toDto(ParkingEntity parkingEntity);
 
-    List<ParkingDto> listModelToListDto(List<ParkingEntity> parkingList);
+    List<ParkingDto> toListDto(List<ParkingEntity> parkingList);
 }
