@@ -13,4 +13,6 @@ public class ParkingPageableFilter extends PageableFilter {
     private String name;
 
     private String type;
+
+    private String status;
 }

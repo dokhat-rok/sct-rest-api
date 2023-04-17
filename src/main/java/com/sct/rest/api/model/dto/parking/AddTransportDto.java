@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -12,11 +13,9 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 public class AddTransportDto {
 
-    @NotNull
-    @PositiveOrZero
-    private Long parkingId;
+    @NotBlank
+    private String parkingName;
 
-    @NotNull
-    @PositiveOrZero
-    private Long transportId;
+    @NotBlank
+    private String transportIdent;
 }

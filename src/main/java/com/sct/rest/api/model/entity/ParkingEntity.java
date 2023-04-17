@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.enums.ParkingStatus;
 import com.sct.rest.api.model.enums.ParkingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,9 @@ public class ParkingEntity {
 
     @Enumerated(EnumType.STRING)
     private ParkingType type;
+
+    @Enumerated(EnumType.STRING)
+    private ParkingStatus status;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_parking")

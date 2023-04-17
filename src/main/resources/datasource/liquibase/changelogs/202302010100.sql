@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS public.parking(
     coordinates     VARCHAR         NOT NULL,
     allowed_radius  BIGINT          NOT NULL,
     type            VARCHAR         NOT NULL,
+    status          VARCHAR         NOT NULL,
 
     CONSTRAINT parking_id   PRIMARY KEY (id)
 );
