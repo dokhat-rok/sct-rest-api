@@ -2,7 +2,6 @@ package com.sct.rest.api.service.impl;
 
 import com.sct.rest.api.mapper.rent.RentMapper;
 import com.sct.rest.api.model.dto.RentDto;
-import com.sct.rest.api.model.entity.RentEntity;
 import com.sct.rest.api.model.enums.RentStatus;
 import com.sct.rest.api.model.filter.RentPageableFilter;
 import com.sct.rest.api.repository.RentRepository;
@@ -11,7 +10,6 @@ import com.sct.rest.api.service.RentService;
 import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
