@@ -78,11 +78,6 @@ public class TripServiceImpl implements TripService {
                 .status(RentStatus.OPEN)
                 .build();
 
-        customerRepository.save(customer);
-        parkingRepository.save(parking);
-        transportRepository.save(transport);
-        rentRepository.save(rent);
-
         return rentMapper.toDto(rent);
     }
 
@@ -112,11 +107,6 @@ public class TripServiceImpl implements TripService {
         rent.setEndParking(parking);
         rent.setStatus(RentStatus.CLOSE);
         rent.setAmount(amount + price.getInit());
-
-        customerRepository.save(customer);
-        parkingRepository.save(parking);
-        transportRepository.save(transport);
-        rentRepository.save(rent);
 
         return rentMapper.toDto(rent);
     }

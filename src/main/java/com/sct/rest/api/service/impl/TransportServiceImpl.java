@@ -21,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,24 +55,18 @@ public class TransportServiceImpl implements TransportService {
             transport.setMaxSpeed(25L);
         }
 
-        Optional<ParkingEntity> parkingOptional = parkingRepository.findByName(transportDto.getParking().getName());
-        ParkingEntity parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
-                ErrorCodeEnum.PARKING_NOT_FOUND,
-                new Throwable(),
-                transportDto.getParking().getName()));
+        ParkingEntity parking = this.getParking(transportDto.getParking().getName());
+        if(parking == null) return;
 
         transport.setCoordinates(parking.getCoordinates());
         transport.setParking(parking);
         parking.getTransports().add(transport);
-
-        transportRepository.save(transport);
-        parkingRepository.save(parking);
     }
 
     @Override
     public void deleteTransport(TransportDto transportDto) {
-        transportDto.setStatus(TransportStatus.UNAVAILABLE);
-        transportRepository.save(transportMapper.toModel(transportDto));
+        TransportEntity transport = this.getTransport(transportDto.getIdentificationNumber());
+        transport.setStatus(TransportStatus.UNAVAILABLE);
     }
 
     @Override
@@ -87,5 +80,14 @@ public class TransportServiceImpl implements TransportService {
                 condition,
                 status)
                 .map(transportMapper::toDto);
+    }
+
+    private TransportEntity getTransport(String ident) {
+        return transportRepository.findByIdentificationNumber(ident)
+                .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.TRANSPORT_NOT_FOUND, new Throwable()));
+    }
+
+    private ParkingEntity getParking(String name) {
+        return parkingRepository.findByName(name).orElse(null);
     }
 }

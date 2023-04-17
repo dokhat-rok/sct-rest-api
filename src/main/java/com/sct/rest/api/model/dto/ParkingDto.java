@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.dto;
 
+import com.sct.rest.api.model.enums.ParkingStatus;
 import com.sct.rest.api.model.enums.ParkingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,8 @@ public class ParkingDto {
 
     @NotNull(message = "Тип не может быть пустым")
     private ParkingType type;
+
+    private ParkingStatus status;
 
     private List<TransportDto> transports;
 }
