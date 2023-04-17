@@ -12,5 +12,7 @@ public interface ParkingMapper {
 
     ParkingEntity toModel(ParkingDto parkingDto);
 
+    ParkingDto toDto(ParkingEntity parkingEntity);
+
     List<ParkingDto> toListDto(List<ParkingEntity> parkingList);
 }

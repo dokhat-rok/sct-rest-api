@@ -81,14 +81,12 @@ public class TransportServiceImpl implements TransportService {
     public Page<TransportDto> getAllTransportFilterAndPageable(TransportPageableFilter filter) {
         Condition condition = EnumConverter.stringToEnum(Condition.class, filter.getCondition());
         TransportStatus status = EnumConverter.stringToEnum(TransportStatus.class, filter.getStatus());
-        Page<TransportEntity> entityPage = transportRepository.findAllByFilter(
+        return transportRepository.findAllByFilter(
                 PageRequest.of(filter.getPage(), filter.getSize()),
                 filter.getIdentificationNumber(),
                 filter.getParkingName(),
                 condition,
-                status);
-        return new PageImpl<>(transportMapper.toListDto(entityPage.getContent()),
-                entityPage.getPageable(),
-                entityPage.getTotalElements());
+                status)
+                .map(transportMapper::toDto);
     }
 }

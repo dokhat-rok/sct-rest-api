@@ -56,10 +56,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Page<CustomerDto> getAllCustomerFilterAndPageable(CustomerPageableFilter filter) {
         Role role = EnumConverter.stringToEnum(Role.class, filter.getRole());
-        Page<CustomerEntity> entityPage = customerRepository
-                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getLogin(), role);
-        return new PageImpl<>(customerMapper.toListDto(entityPage.getContent()),
-                entityPage.getPageable(),
-                entityPage.getTotalElements());
+        return customerRepository
+                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getLogin(), role)
+                .map(customerMapper::toDto);
     }
 }

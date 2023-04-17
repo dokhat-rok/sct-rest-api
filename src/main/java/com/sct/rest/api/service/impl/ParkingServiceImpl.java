@@ -86,10 +86,8 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public Page<ParkingDto> getAllParkingFilterAndPageable(ParkingPageableFilter filter) {
         ParkingType type = EnumConverter.stringToEnum(ParkingType.class, filter.getType());
-        Page<ParkingEntity> entityPage = parkingRepository
-                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type);
-        return new PageImpl<>(parkingMapper.toListDto(entityPage.getContent()),
-                entityPage.getPageable(),
-                entityPage.getTotalElements());
+        return parkingRepository
+                .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type)
+                .map(parkingMapper::toDto);
     }
 }

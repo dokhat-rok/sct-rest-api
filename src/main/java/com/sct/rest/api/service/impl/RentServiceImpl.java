@@ -40,12 +40,10 @@ public class RentServiceImpl implements RentService {
     @Override
     public Page<RentDto> getAllRentFilterAndPageable(RentPageableFilter filter) {
         RentStatus status = EnumConverter.stringToEnum(RentStatus.class, filter.getStatus());
-        Page<RentEntity> entityPage = rentRepository.findAllByFilter(
+        return rentRepository.findAllByFilter(
                 PageRequest.of(filter.getPage(), filter.getSize()),
                 filter.getLogin(),
-                filter.getTransportIdent(), status);
-        return new PageImpl<>(rentMapper.toListDto(entityPage.getContent()),
-                entityPage.getPageable(),
-                entityPage.getTotalElements());
+                filter.getTransportIdent(), status)
+                .map(rentMapper::toDto);
     }
 }

@@ -12,5 +12,7 @@ public interface TransportMapper {
 
     TransportEntity toModel(TransportDto transportDto);
 
+    TransportDto toDto(TransportEntity transportEntity);
+
     List<TransportDto> toListDto(List<TransportEntity> transportList);
 }
