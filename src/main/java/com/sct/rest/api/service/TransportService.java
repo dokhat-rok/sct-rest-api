@@ -14,6 +14,13 @@ import java.util.List;
 public interface TransportService {
 
     /**
+     * Получение списка всех транспортов
+     *
+     * @return Список объектов типа {@link TransportDto}
+     */
+    List<TransportDto> getAllTransport();
+
+    /**
      * Получение отфильтрованного списка транспортов
      *
      * @param filter Параметры фильтрации {@link TransportFilter}

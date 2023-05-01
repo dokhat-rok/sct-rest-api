@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,13 @@ public class TransportServiceImpl implements TransportService {
     private final TransportRepository transportRepository;
 
     private final TransportMapper transportMapper;
+
+    @Override
+    public List<TransportDto> getAllTransport() {
+        return transportRepository.findAll().stream()
+                .map(transportMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<TransportDto> getAllTransportByFilter(TransportFilter filter) {

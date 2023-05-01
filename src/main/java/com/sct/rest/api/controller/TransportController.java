@@ -24,17 +24,24 @@ public class TransportController {
 
     private final TransportService transportService;
 
-    @GetMapping(value = "/all/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<TransportDto>> getAllTransports(@NotNull TransportFilter filter) {
-        List<TransportDto> transports = transportService.getAllTransportByFilter(filter);
+    @GetMapping("/all")
+    public ResponseEntity<List<TransportDto>> getAllTransports() {
+        List<TransportDto> transports = transportService.getAllTransport();
         log.info("Get transport count: {}", transports.size());
+        return ResponseEntity.ok(transports);
+    }
+
+    @GetMapping(value = "/all/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TransportDto>> getAllTransportsFilter(@NotNull TransportFilter filter) {
+        List<TransportDto> transports = transportService.getAllTransportByFilter(filter);
+        log.info("Get filter transports count: {}", transports.size());
         return ResponseEntity.ok(transports);
     }
 
     @GetMapping(value = "/all/pageable", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<TransportDto>> getAllTransportsFilterAndPageable(TransportPageableFilter filter) {
         Page<TransportDto> page = transportService.getAllTransportFilterAndPageable(filter);
-        log.info("Get pageable transport: {}", page);
+        log.info("Get pageable transports: {}", page);
         return ResponseEntity.ok(page);
     }
 

@@ -76,7 +76,9 @@ public class TripServiceImpl implements TripService {
                 .beginTimeRent(ZonedDateTime.now())
                 .beginParking(parking)
                 .status(RentStatus.OPEN)
+                .amount(price.getInit())
                 .build();
+        rentRepository.save(rent);
 
         return rentMapper.toDto(rent);
     }
@@ -106,7 +108,7 @@ public class TripServiceImpl implements TripService {
         rent.setEndTimeRent(endTimeRent);
         rent.setEndParking(parking);
         rent.setStatus(RentStatus.CLOSE);
-        rent.setAmount(amount + price.getInit());
+        rent.setAmount(amount + rent.getAmount());
 
         return rentMapper.toDto(rent);
     }
