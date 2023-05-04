@@ -19,6 +19,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Value("#{'${cors.registry.allowed-origins}'.split(', ')}")
     private String[] origins;
 
+    @Value("#{'${cors.registry.methods}'.split(', ')}")
+    private String[] methods;
+
     private final SecurityInterceptor interceptor;
 
     @Override
@@ -29,6 +32,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         log.info("CORS config: allowed-origins={}", Arrays.toString(origins));
-        registry.addMapping("/**").allowedOrigins(origins);
+        registry.addMapping("/**").allowedMethods(methods).allowedHeaders("*").allowedOrigins(origins);
     }
 }

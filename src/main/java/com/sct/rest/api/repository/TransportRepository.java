@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +28,19 @@ public interface TransportRepository extends JpaRepository<TransportEntity, Long
             "and (:condition is null or transport.condition = :condition)" +
             "and (:status is null or transport.status = :status)")
     Page<TransportEntity> findAllByFilter(Pageable pageable,
-                                          String ident,
-                                          String parkName,
-                                          Condition condition,
-                                          TransportStatus status);
+                                          @Nullable String ident,
+                                          @Nullable String parkName,
+                                          @Nullable Condition condition,
+                                          @Nullable TransportStatus status
+    );
+
+    @Query("select transport from TransportEntity transport " +
+            "where (:ident is null or transport.identificationNumber like %:ident%)" +
+            "and (:condition is null or transport.condition = :condition)" +
+            "and (:status is null or transport.status = :status)")
+    Page<TransportEntity> findAllByFilter(Pageable pageable,
+                                          @Nullable String ident,
+                                          @Nullable Condition condition,
+                                          @Nullable TransportStatus status
+    );
 }

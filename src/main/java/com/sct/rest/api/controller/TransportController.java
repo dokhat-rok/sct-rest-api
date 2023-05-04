@@ -52,6 +52,13 @@ public class TransportController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping
+    public ResponseEntity<Void> updateParking(@RequestBody TransportDto transport) {
+        transportService.updateTransport(transport);
+        log.info("Update transport: {}", transport);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteTransport(@RequestBody TransportDto transport) {
         transportService.deleteTransport(transport);

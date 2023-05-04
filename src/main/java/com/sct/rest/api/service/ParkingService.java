@@ -25,6 +25,7 @@ public interface ParkingService {
      *
      * @param parking Информация о новой парковке
      */
+    @Transactional
     void createParking(ParkingDto parking);
 
     /**

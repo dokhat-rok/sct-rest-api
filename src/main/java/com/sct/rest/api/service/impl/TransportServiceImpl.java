@@ -16,6 +16,7 @@ import com.sct.rest.api.repository.TransportRepository;
 import com.sct.rest.api.service.TransportService;
 import com.sct.rest.api.util.EnumConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransportServiceImpl implements TransportService {
 
     private final ParkingRepository parkingRepository;
@@ -52,6 +54,11 @@ public class TransportServiceImpl implements TransportService {
     public void createTransport(TransportDto transportDto) {
         transportDto.setStatus(TransportStatus.FREE);
         transportDto.setCondition(Condition.EXCELLENT);
+
+        ParkingEntity parking = this.getParking(transportDto.getParking().getName());
+        if(parking == null) return;
+        transportDto.setParking(null);
+
         TransportEntity transport = transportRepository.save(transportMapper.toModel(transportDto));
 
         String ident = transport.getType() == TransportType.BICYCLE ?
@@ -63,12 +70,26 @@ public class TransportServiceImpl implements TransportService {
             transport.setMaxSpeed(25L);
         }
 
-        ParkingEntity parking = this.getParking(transportDto.getParking().getName());
-        if(parking == null) return;
-
         transport.setCoordinates(parking.getCoordinates());
         transport.setParking(parking);
         parking.getTransports().add(transport);
+    }
+
+    @Override
+    public void updateTransport(TransportDto transportDto) {
+        TransportEntity transport = this.getTransport(transportDto.getIdentificationNumber());
+        transport.setCoordinates(transportDto.getCoordinates());
+        transport.setParking(this.getParking(transportDto.getParking().getName()));
+        transport.setCondition(transportDto.getCondition());
+        transport.setStatus(transportDto.getStatus());
+
+        if(transport.getType() == TransportType.BICYCLE) return;
+
+        if(transportDto.getChargePercentage() < 0 || transportDto.getChargePercentage() > 100
+                || transportDto.getMaxSpeed() < 1 || transportDto.getMaxSpeed() > 35)
+            throw new ServiceRuntimeException(ErrorCodeEnum.VALIDATION_ERROR, new Throwable());
+        transport.setChargePercentage(transportDto.getChargePercentage());
+        transport.setMaxSpeed(transportDto.getMaxSpeed());
     }
 
     @Override
@@ -81,7 +102,14 @@ public class TransportServiceImpl implements TransportService {
     public Page<TransportDto> getAllTransportFilterAndPageable(TransportPageableFilter filter) {
         Condition condition = EnumConverter.stringToEnum(Condition.class, filter.getCondition());
         TransportStatus status = EnumConverter.stringToEnum(TransportStatus.class, filter.getStatus());
-        return transportRepository.findAllByFilter(
+        return filter.getParkingName() == null
+                ? transportRepository.findAllByFilter(
+                PageRequest.of(filter.getPage(), filter.getSize()),
+                filter.getIdentificationNumber(),
+                condition,
+                status)
+                .map(transportMapper::toDto)
+                : transportRepository.findAllByFilter(
                 PageRequest.of(filter.getPage(), filter.getSize()),
                 filter.getIdentificationNumber(),
                 filter.getParkingName(),
@@ -96,6 +124,6 @@ public class TransportServiceImpl implements TransportService {
     }
 
     private ParkingEntity getParking(String name) {
-        return parkingRepository.findByName(name).orElse(null);
+        return parkingRepository.findByNameForUser(name).orElse(null);
     }
 }

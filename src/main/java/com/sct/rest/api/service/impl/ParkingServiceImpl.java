@@ -38,20 +38,28 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public void createParking(ParkingDto parking) {
-        parkingRepository.save(parkingMapper.toModel(parking));
+        parking.setStatus(ParkingStatus.ACTIVE);
+        if(parking.getName().equals("Новая парковка")) parking.setName("ПАРК");
+        ParkingEntity parkingEntity = parkingRepository.save(parkingMapper.toModel(parking));
+        parkingEntity.setName(parkingEntity.getName() + "-" + parkingEntity.getId());
     }
 
     @Override
     public void updateParking(ParkingDto parkingDto) {
         ParkingEntity parking = this.getParking(parkingDto.getName());
+        parking.setName(parkingDto.getName());
         parking.setCoordinates(parkingDto.getCoordinates());
-        parking.setType(parkingDto.getType());
-        parking.setAllowedRadius(parking.getAllowedRadius());
+        parking.setStatus(parkingDto.getStatus());
+        parking.setAllowedRadius(parkingDto.getAllowedRadius());
+
+        if(parking.getStatus() == ParkingStatus.ACTIVE) return;
+
+        parking.getTransports().forEach(t -> t.setParking(null));
     }
 
     @Override
     public void addTransport(AddTransportDto addTransport) {
-        ParkingEntity parking = this.getParking(addTransport.getParkingName());
+        ParkingEntity parking = this.getParkingForUser(addTransport.getParkingName());
         TransportEntity transport = this.getTransport(addTransport.getTransportIdent());
 
         transport.setParking(parking);
@@ -69,9 +77,15 @@ public class ParkingServiceImpl implements ParkingService {
     public Page<ParkingDto> getAllParkingFilterAndPageable(ParkingPageableFilter filter) {
         ParkingType type = EnumConverter.stringToEnum(ParkingType.class, filter.getType());
         ParkingStatus status = EnumConverter.stringToEnum(ParkingStatus.class, filter.getStatus());
+        if(filter.getName() != null) filter.setName(filter.getName().toLowerCase());
         return parkingRepository
                 .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getName(), type, status)
                 .map(parkingMapper::toDto);
+    }
+
+    private ParkingEntity getParkingForUser(String name) {
+        return parkingRepository.findByNameForUser(name)
+                .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.PARKING_NOT_FOUND, new Throwable()));
     }
 
     private ParkingEntity getParking(String name) {

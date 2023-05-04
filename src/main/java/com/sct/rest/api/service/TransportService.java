@@ -37,6 +37,14 @@ public interface TransportService {
     void createTransport(TransportDto transport);
 
     /**
+     * Обновление существующего транспорта
+     *
+     * @param transport Информация о обновляемом транспорте
+     */
+    @Transactional
+    void updateTransport(TransportDto transport);
+
+    /**
      * Удаление транспорта
      *
      * @param transportDto Информация об удаляемом транспорте
