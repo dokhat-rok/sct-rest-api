@@ -55,8 +55,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Page<CustomerDto> getAllCustomerFilterAndPageable(CustomerPageableFilter filter) {
         Role role = EnumConverter.stringToEnum(Role.class, filter.getRole());
+
+        if(filter.getLogin() != null) filter.setLogin(filter.getLogin().toLowerCase());
+
         return customerRepository
                 .findAllByFilter(PageRequest.of(filter.getPage(), filter.getSize()), filter.getLogin(), role)
-                .map(customerMapper::toDto);
+                .map(customerMapper::toDto)
+                .map(c -> {
+                    c.setTripCount(rentRepository.countRentByCustomerLogin(c.getLogin()));
+                    return c;
+                });
     }
 }

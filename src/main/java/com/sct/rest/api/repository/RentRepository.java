@@ -17,8 +17,9 @@ public interface RentRepository extends JpaRepository<RentEntity, Long> {
 
     List<RentEntity> findAllByCustomerLoginAndStatus(String login, RentStatus status);
 
-    @Query("select rent from RentEntity rent where (:login is null or rent.customer.login like %:login%) " +
-            "and (:transportIdent is null or rent.transport.identificationNumber like %:transportIdent%) " +
+    @Query("select rent from RentEntity rent where " +
+            "(:login is null or lower(rent.customer.login) like %:login%) " +
+            "and (:transportIdent is null or lower(rent.transport.identificationNumber) like %:transportIdent%) " +
             "and (:status is null or rent.status = :status)")
     Page<RentEntity> findAllByFilter(
             Pageable pageable,

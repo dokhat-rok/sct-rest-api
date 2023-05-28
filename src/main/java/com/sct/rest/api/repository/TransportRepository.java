@@ -23,8 +23,8 @@ public interface TransportRepository extends JpaRepository<TransportEntity, Long
     List<TransportEntity> findAllByTypeAndStatus(TransportType type, TransportStatus status);
 
     @Query("select transport from TransportEntity transport " +
-            "where (:ident is null or transport.identificationNumber like %:ident%)" +
-            "and (:parkName is null or transport.parking.name like %:parkName%)" +
+            "where (:ident is null or lower(transport.identificationNumber) like %:ident%)" +
+            "and (:parkName is null or lower(transport.parking.name) like %:parkName%)" +
             "and (:condition is null or transport.condition = :condition)" +
             "and (:status is null or transport.status = :status)")
     Page<TransportEntity> findAllByFilter(Pageable pageable,
@@ -35,7 +35,7 @@ public interface TransportRepository extends JpaRepository<TransportEntity, Long
     );
 
     @Query("select transport from TransportEntity transport " +
-            "where (:ident is null or transport.identificationNumber like %:ident%)" +
+            "where (:ident is null or lower(transport.identificationNumber) like %:ident%)" +
             "and (:condition is null or transport.condition = :condition)" +
             "and (:status is null or transport.status = :status)")
     Page<TransportEntity> findAllByFilter(Pageable pageable,

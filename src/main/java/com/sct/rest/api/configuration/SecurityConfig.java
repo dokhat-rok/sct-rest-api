@@ -31,7 +31,7 @@ public class SecurityConfig {
             "/v1/customer/current",
             "/v1/parking/all",
             "/v1/transport/all/filter",
-            "/v1/trip",
+            "/v1/trip/**",
             "/v1/rent/current/all",
     };
     private final String[] AUTH_ROLE_LIST = {Role.ADMIN.name(), Role.MANAGER.name(), Role.USER.name()};
