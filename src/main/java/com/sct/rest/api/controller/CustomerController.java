@@ -9,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
 
@@ -44,5 +41,12 @@ public class CustomerController {
         Page<CustomerDto> page = customerService.getAllCustomerFilterAndPageable(filter);
         log.info("Get pageable customer: {}", page);
         return ResponseEntity.ok(page);
+    }
+
+    @DeleteMapping("/current")
+    public ResponseEntity<Void> deleteCurrent() {
+        log.info("Delete current customer: {}", customerService.getCurrent().getLogin());
+        customerService.deleteCurrent();
+        return ResponseEntity.ok().build();
     }
 }

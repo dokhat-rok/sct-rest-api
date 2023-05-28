@@ -3,6 +3,7 @@ package com.sct.rest.api.service;
 import com.sct.rest.api.model.dto.CustomerDto;
 import com.sct.rest.api.model.filter.CustomerPageableFilter;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Сервис для работы с данными пользователей
@@ -39,4 +40,10 @@ public interface CustomerService {
      * @return Отфильтрованная страница с пользователями {@link CustomerDto}
      */
     Page<CustomerDto> getAllCustomerFilterAndPageable(CustomerPageableFilter filter);
+
+    /**
+     * Удаление текущего пользователя из системы
+     */
+    @Transactional
+    void deleteCurrent();
 }

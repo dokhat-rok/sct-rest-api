@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.customer(
     password    VARCHAR         NOT NULL,
     balance     BIGINT          NOT NULL,
     role        VARCHAR         NOT NULL,
+    status      VARCHAR         NOT NULL,
 
     CONSTRAINT customer_id              PRIMARY KEY (id),
     CONSTRAINT customer_unique_fields   UNIQUE      (login)
