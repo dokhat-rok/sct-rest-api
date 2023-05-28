@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.enums.ParkingStatus;
 import com.sct.rest.api.model.enums.ParkingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +13,12 @@ import java.util.List;
 
 
 @Entity
-@Table
+@Table(name = "parking")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Parking {
+public class ParkingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_parking")
@@ -34,8 +35,11 @@ public class Parking {
     @Enumerated(EnumType.STRING)
     private ParkingType type;
 
+    @Enumerated(EnumType.STRING)
+    private ParkingStatus status;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_parking")
-    private List<Transport> transports = new ArrayList<>();
+    private List<TransportEntity> transports = new ArrayList<>();
 
 }

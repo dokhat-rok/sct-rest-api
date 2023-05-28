@@ -1,73 +1,62 @@
 package com.sct.rest.api.service;
 
-import com.sct.rest.api.exception.ServiceRuntimeException;
-import com.sct.rest.api.exception.enums.ErrorCodeEnum;
-import com.sct.rest.api.mapper.parking.ParkingMapper;
 import com.sct.rest.api.model.dto.ParkingDto;
 import com.sct.rest.api.model.dto.parking.AddTransportDto;
-import com.sct.rest.api.model.entity.Parking;
-import com.sct.rest.api.model.entity.Transport;
-import com.sct.rest.api.repository.ParkingRepository;
-import com.sct.rest.api.repository.TransportRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.sct.rest.api.model.filter.ParkingPageableFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class ParkingService {
+/**
+ * Сервис для работы с данными парковок
+ */
+public interface ParkingService {
 
-    private final ParkingRepository parkingRepository;
+    /**
+     * Получить все парковки
+     *
+     * @return Список объектов типа {@link ParkingDto}
+     */
+    List<ParkingDto> getAllParking();
 
-    private final TransportRepository transportRepository;
+    /**
+     * Создать новую парковку
+     *
+     * @param parking Информация о новой парковке
+     */
+    @Transactional
+    void createParking(ParkingDto parking);
 
-    private final ParkingMapper parkingMapper;
+    /**
+     * Изменить данные парковки
+     *
+     * @param parking Парковка с новыми данными
+     */
+    @Transactional
+    void updateParking(ParkingDto parking);
 
-    public List<ParkingDto> getAllParking() {
-        return parkingMapper.listModelToListDto(parkingRepository.findAll());
-    }
+    /**
+     * Добавить транспорт на парковку
+     *
+     * @param addTransport Идентификатор парковки и транспорта
+     */
+    @Transactional
+    void addTransport(AddTransportDto addTransport);
 
-    public void createParking(ParkingDto parkingDto) {
-        parkingRepository.save(parkingMapper.dtoToModel(parkingDto));
-    }
+    /**
+     * Удалить парковку
+     *
+     * @param parking Парковка для удаления
+     */
+    @Transactional
+    void deleteParking(ParkingDto parking);
 
-    public void updateParking(ParkingDto parkingDto) {
-        List<Transport> transportList = new ArrayList<>();
-        for (var transport : parkingDto.getTransports()) {
-            Optional<Transport> transportOpt = transportRepository
-                    .findByIdentificationNumber(transport.getIdentificationNumber());
-            transportOpt.ifPresent(transportList::add);
-        }
-        Parking parking = parkingMapper.dtoToModel(parkingDto);
-        parking.setTransports(transportList);
-        parkingRepository.save(parking);
-    }
-
-    public void addTransport(AddTransportDto addTransport) {
-        Optional<Parking> parkingOptional = parkingRepository.findById(addTransport.getParkingId());
-        Optional<Transport> transportOptional = transportRepository.findById(addTransport.getTransportId());
-
-        Parking parking = parkingOptional.orElseThrow(() -> new ServiceRuntimeException(
-                ErrorCodeEnum.PARKING_NOT_FOUND,
-                new Throwable(),
-                addTransport.getParkingId()));
-        Transport transport = transportOptional.orElseThrow(() -> new ServiceRuntimeException(
-                ErrorCodeEnum.TRANSPORT_NOT_FOUND,
-                new Throwable(),
-                addTransport.getTransportId()));
-
-        transport.setParking(parking);
-        transport.setCoordinates(parking.getCoordinates());
-        parking.getTransports().add(transport);
-
-        parkingRepository.save(parking);
-        transportRepository.save(transport);
-    }
-
-    public void deleteParking(ParkingDto parkingDto) {
-        parkingRepository.delete(parkingMapper.dtoToModel(parkingDto));
-    }
+    /**
+     * Получение отфильтрованных страниц парковок
+     *
+     * @param filter Параметры фильтрации и пагинации парковок {@link ParkingPageableFilter}
+     * @return Отфильтрованная страница парковок {@link ParkingDto}
+     */
+    Page<ParkingDto> getAllParkingFilterAndPageable(ParkingPageableFilter filter);
 }

@@ -1,7 +1,7 @@
 package com.sct.rest.api.mapper.parking;
 
 import com.sct.rest.api.model.dto.ParkingDto;
-import com.sct.rest.api.model.entity.Parking;
+import com.sct.rest.api.model.entity.ParkingEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -10,9 +10,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ParkingMapper {
 
-    Parking dtoToModel(ParkingDto parkingDto);
+    ParkingEntity toModel(ParkingDto parkingDto);
 
-    ParkingDto modelToDto(Parking parking);
+    ParkingDto toDto(ParkingEntity parkingEntity);
 
-    List<ParkingDto> listModelToListDto(List<Parking> parkingList);
+    List<ParkingDto> toListDto(List<ParkingEntity> parkingList);
 }

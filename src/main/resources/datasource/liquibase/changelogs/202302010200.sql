@@ -5,9 +5,9 @@ INSERT INTO public.customer(id, login, password, balance, role) VALUES
 (1, 'Admin', '1111', 0, 'ADMIN');
 
 --changeset dmitry.krivenko:202302010200-2
-INSERT INTO public.parking(id, name, coordinates, allowed_radius, type) VALUES
-(1, 'ДГТУ', '47.236372918786934,39.71263323803597', 200, 'ALL'),
-(2, 'ГОРЬКИЙ', '47.22245807938916,39.710144148070555', 200, 'ALL');
+INSERT INTO public.parking(id, name, coordinates, allowed_radius, type, status) VALUES
+(1, 'ДГТУ-1', '47.236372918786934,39.71263323803597', 200, 'ALL', 'ACTIVE'),
+(2, 'ГОРЬКИЙ-2', '47.22245807938916,39.710144148070555', 200, 'ALL', 'ACTIVE');
 
 --changeset dmitry.krivenko:202302010200-3
 INSERT INTO public.transport(id, id_parking, type, identification_number,

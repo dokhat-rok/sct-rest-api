@@ -1,30 +1,37 @@
 package com.sct.rest.api.service;
 
-import com.sct.rest.api.mapper.rent.RentMapper;
 import com.sct.rest.api.model.dto.RentDto;
 import com.sct.rest.api.model.enums.RentStatus;
-import com.sct.rest.api.repository.RentRepository;
-import com.sct.rest.api.security.SecurityContext;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.sct.rest.api.model.filter.RentPageableFilter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class RentService {
+/**
+ * Сервис для работы с данными аренд
+ */
+public interface RentService {
 
-    private final RentRepository rentRepository;
+    /**
+     * Получить все аренды
+     *
+     * @return Список объектов типа {@link RentDto}
+     */
+    List<RentDto> getAllRent();
 
-    private final RentMapper rentMapper;
+    /**
+     * Получить все аренды для текущего пользователя в защищенной сессии по статусу аренды
+     *
+     * @param status Статус аренды {@link RentStatus}
+     * @return Список объектов типа {@link RentDto}
+     */
+    List<RentDto> getAllRentForCurrentUserByStatus(RentStatus status);
 
-    public List<RentDto> getAllRent() {
-        return rentMapper.listModelToListDto(rentRepository.findAll());
-    }
-
-    public List<RentDto> getAllRentForCurrentUserByStatus(RentStatus status) {
-        return rentMapper
-                .listModelToListDto(rentRepository
-                        .findAllByCustomerLoginAndStatus(SecurityContext.get().getCustomerLogin(), status));
-    }
+    /**
+     * Получение отфильтрованной страницы аренд
+     *
+     * @param filter Параметры фильтрации и пагинации аренд {@link RentPageableFilter}
+     * @return Отфильтрованная страница аренд {@link RentDto}
+     */
+    Page<RentDto> getAllRentFilterAndPageable(RentPageableFilter filter);
 }

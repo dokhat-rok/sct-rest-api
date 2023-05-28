@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table
+@Table(name = "rent")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rent {
+public class RentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_rent")
@@ -25,11 +24,11 @@ public class Rent {
 
     @ManyToOne
     @JoinColumn(name = "id_customer")
-    private Customer customer;
+    private CustomerEntity customer;
 
     @ManyToOne
     @JoinColumn(name = "id_transport")
-    private Transport transport;
+    private TransportEntity transport;
 
     @Column(name = "begin_time_rent")
     private ZonedDateTime beginTimeRent;
@@ -39,11 +38,11 @@ public class Rent {
 
     @ManyToOne
     @JoinColumn(name = "id_begin_parking")
-    private Parking beginParking;
+    private ParkingEntity beginParking;
 
     @ManyToOne
     @JoinColumn(name = "id_end_parking")
-    private Parking endParking;
+    private ParkingEntity endParking;
 
     @Enumerated(EnumType.STRING)
     private RentStatus status;
