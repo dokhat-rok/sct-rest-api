@@ -38,6 +38,10 @@ public class RentServiceImpl implements RentService {
     @Override
     public Page<RentDto> getAllRentFilterAndPageable(RentPageableFilter filter) {
         RentStatus status = EnumConverter.stringToEnum(RentStatus.class, filter.getStatus());
+
+        if(filter.getLogin() != null) filter.setLogin(filter.getLogin().toLowerCase());
+        if(filter.getTransportIdent() != null) filter.setTransportIdent(filter.getTransportIdent().toLowerCase());
+
         return rentRepository.findAllByFilter(
                 PageRequest.of(filter.getPage(), filter.getSize()),
                 filter.getLogin(),

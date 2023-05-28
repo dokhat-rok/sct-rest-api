@@ -102,6 +102,11 @@ public class TransportServiceImpl implements TransportService {
     public Page<TransportDto> getAllTransportFilterAndPageable(TransportPageableFilter filter) {
         Condition condition = EnumConverter.stringToEnum(Condition.class, filter.getCondition());
         TransportStatus status = EnumConverter.stringToEnum(TransportStatus.class, filter.getStatus());
+
+        if(filter.getParkingName() != null) filter.setParkingName(filter.getParkingName().toLowerCase());
+        if(filter.getIdentificationNumber() != null) filter.setIdentificationNumber(filter.getIdentificationNumber()
+                .toLowerCase());
+
         return filter.getParkingName() == null
                 ? transportRepository.findAllByFilter(
                 PageRequest.of(filter.getPage(), filter.getSize()),

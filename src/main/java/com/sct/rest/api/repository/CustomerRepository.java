@@ -14,7 +14,8 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
 
     Optional<CustomerEntity> findByLogin(String login);
 
-    @Query("select customer from CustomerEntity customer where (:login is null or customer.login like %:login%) " +
+    @Query("select customer from CustomerEntity customer where " +
+            "(:login is null or lower(customer.login) like %:login%) " +
             "and (:role is null or customer.role = :role)")
     Page<CustomerEntity> findAllByFilter(Pageable pageable, @Nullable String login, @Nullable Role role);
 }
