@@ -42,6 +42,14 @@ public interface CustomerService {
     Page<CustomerDto> getAllCustomerFilterAndPageable(CustomerPageableFilter filter);
 
     /**
+     * Пополнение баланса пользователя
+     * @param amount Сумма пополнения баланса
+     * @return Объект типа {@link CustomerDto}
+     */
+    @Transactional
+    CustomerDto additionalBalance(Long amount);
+
+    /**
      * Удаление текущего пользователя из системы
      */
     @Transactional

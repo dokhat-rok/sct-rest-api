@@ -51,6 +51,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public CustomerDto additionalBalance(Long amount) {
+        CustomerEntity customer = this.getCurrentCustomer(SecurityContext.get().getCustomerLogin());
+        customer.setBalance(customer.getBalance() + amount);
+        return this.getCurrent();
+    }
+
+    @Override
     public void deleteCurrent() {
         CustomerEntity customer = this.getCurrentCustomer(SecurityContext.get().getCustomerLogin());
         customer.setStatus(CustomerStatus.NON_ACTIVE);

@@ -43,6 +43,13 @@ public class CustomerController {
         return ResponseEntity.ok(page);
     }
 
+    @PutMapping("/current/additional")
+    public ResponseEntity<CustomerDto> additionalBalance(@RequestParam @Positive Long amount) {
+        CustomerDto customer = customerService.additionalBalance(amount);
+        log.info("Additional balance on {} to {}", amount, customer.getLogin());
+        return ResponseEntity.ok(customer);
+    }
+
     @DeleteMapping("/current")
     public ResponseEntity<Void> deleteCurrent() {
         log.info("Delete current customer: {}", customerService.getCurrent().getLogin());

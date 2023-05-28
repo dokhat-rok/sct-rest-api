@@ -28,7 +28,7 @@ public class SecurityConfig {
             "/v1/token"
     };
     private final String[] AUTH_LIST = {
-            "/v1/customer/current",
+            "/v1/customer/current/**",
             "/v1/parking/all",
             "/v1/transport/all/filter",
             "/v1/trip/**",
