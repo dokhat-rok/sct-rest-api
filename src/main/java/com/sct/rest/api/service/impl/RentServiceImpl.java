@@ -2,6 +2,7 @@ package com.sct.rest.api.service.impl;
 
 import com.sct.rest.api.mapper.rent.RentMapper;
 import com.sct.rest.api.model.dto.RentDto;
+import com.sct.rest.api.model.entity.RentEntity;
 import com.sct.rest.api.model.enums.RentStatus;
 import com.sct.rest.api.model.filter.RentPageableFilter;
 import com.sct.rest.api.repository.RentRepository;
@@ -30,9 +31,10 @@ public class RentServiceImpl implements RentService {
 
     @Override
     public List<RentDto> getAllRentForCurrentUserByStatus(RentStatus status) {
+        List<RentEntity> rentList = rentRepository
+                .findAllByCustomerLoginAndStatus(SecurityContext.get().getCustomerLogin(), status);
         return rentMapper
-                .toListDto(rentRepository
-                        .findAllByCustomerLoginAndStatus(SecurityContext.get().getCustomerLogin(), status));
+                .toListDto(rentList);
     }
 
     @Override

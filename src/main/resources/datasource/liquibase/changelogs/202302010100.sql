@@ -58,4 +58,16 @@ CREATE TABLE IF NOT EXISTS public.rent(
     FOREIGN KEY (id_transport)      REFERENCES  transport(id),
     FOREIGN KEY (id_begin_parking)  REFERENCES  parking(id),
     FOREIGN KEY (id_end_parking)    REFERENCES  parking(id)
+);
+
+--changeset dmitry.krivenko:202302010100-5
+CREATE TABLE IF NOT EXISTS public.route_point(
+    id                  BIGINT        NOT NULL,
+    id_rent             BIGINT        NOT NULL,
+    latitude            DECIMAL       NOT NULL,
+    longitude           DECIMAL       NOT NULL,
+    created_date        TIMESTAMP     NOT NULL,
+
+    CONSTRAINT route_point_id        PRIMARY KEY (id),
+    FOREIGN KEY (id_rent)             REFERENCES rent(id)
 )

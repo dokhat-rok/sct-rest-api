@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -35,6 +36,8 @@ public class RentDto {
     private ParkingDto beginParking;
 
     private ParkingDto endParking;
+
+    private List<RoutePointDto> routePoints;
 
     @NotNull
     private RentStatus status;

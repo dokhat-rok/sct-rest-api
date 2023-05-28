@@ -33,6 +33,7 @@ public class SecurityConfig {
             "/v1/transport/all/filter",
             "/v1/trip/**",
             "/v1/rent/current/all",
+            "/v1/route/point"
     };
     private final String[] AUTH_ROLE_LIST = {Role.ADMIN.name(), Role.MANAGER.name(), Role.USER.name()};
     private final String[] ADMIN_ROLE_LIST = {Role.ADMIN.name(), Role.MANAGER.name()};
