@@ -30,5 +30,5 @@ public class RoutePointEntity {
     private Double longitude;
 
     @Column(name = "created_date")
-    private ZonedDateTime created_date;
+    private ZonedDateTime createdDate;
 }

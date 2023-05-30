@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoutePointRepository extends JpaRepository<RoutePointEntity, Long> {
 
+    RoutePointEntity findFirstByRentIdOrderByCreatedDateDesc(Long rentId);
+
 }

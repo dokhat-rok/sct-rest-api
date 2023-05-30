@@ -37,7 +37,7 @@ public class RentServiceImpl implements RentService {
         List<RentEntity> rentList = rentRepository
                 .findAllByCustomerLoginAndStatus(SecurityContext.get().getCustomerLogin(), status);
         rentList.forEach(r -> r.setRoutePoints(r.getRoutePoints().stream()
-                .sorted(Comparator.comparing(RoutePointEntity::getCreated_date))
+                .sorted(Comparator.comparing(RoutePointEntity::getCreatedDate))
                 .collect(Collectors.toList())));
         return rentMapper
                 .toListDto(rentList);

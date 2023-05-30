@@ -19,7 +19,7 @@ public class RoutePointServiceImpl implements RoutePointService {
 
     @Override
     public void save(RoutePointDto routePoint) {
-        routePoint.setCreated_date(ZonedDateTime.now());
+        routePoint.setCreatedDate(ZonedDateTime.now());
         routePointRepository.save(routePointMapper.toModel(routePoint));
     }
 }

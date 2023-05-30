@@ -20,5 +20,5 @@ public class RoutePointDto {
 
     private Double longitude;
 
-    private ZonedDateTime created_date;
+    private ZonedDateTime createdDate;
 }
