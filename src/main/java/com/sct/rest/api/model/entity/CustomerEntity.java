@@ -1,5 +1,6 @@
 package com.sct.rest.api.model.entity;
 
+import com.sct.rest.api.model.enums.CustomerStatus;
 import com.sct.rest.api.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_customer")
-    @SequenceGenerator(name = "seq_customer", sequenceName = "seq_customer", initialValue = 2, allocationSize = 1)
+    @SequenceGenerator(name = "seq_customer", sequenceName = "seq_customer", initialValue = 3, allocationSize = 1)
     private Long id;
 
     private String login;
@@ -29,4 +30,7 @@ public class CustomerEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private CustomerStatus status;
 }

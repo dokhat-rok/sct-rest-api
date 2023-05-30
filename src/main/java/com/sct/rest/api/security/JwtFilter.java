@@ -33,7 +33,7 @@ public class JwtFilter extends GenericFilterBean {
 
         String authorizationHeader = ((HttpServletRequest)request).getHeader(HttpHeaders.AUTHORIZATION);
         CallContext context = new CallContext();
-        if (authorizationHeader == null) {
+        if (authorizationHeader.equals("Bearer")) {
             context.setAuthenticated(true);
             context.setCustomerRoles(Set.of(Role.UNKNOWN));
             SecurityContextHolder.getContext().setAuthentication(context);

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "rent")
@@ -43,6 +45,10 @@ public class RentEntity {
     @ManyToOne
     @JoinColumn(name = "id_end_parking")
     private ParkingEntity endParking;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_rent")
+    private List<RoutePointEntity> routePoints = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private RentStatus status;
