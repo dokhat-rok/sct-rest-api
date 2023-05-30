@@ -5,6 +5,7 @@ import com.sct.rest.api.exception.enums.ErrorCodeEnum;
 import com.sct.rest.api.mapper.customer.CustomerMapper;
 import com.sct.rest.api.model.dto.CustomerDto;
 import com.sct.rest.api.model.entity.CustomerEntity;
+import com.sct.rest.api.model.enums.CustomerStatus;
 import com.sct.rest.api.model.enums.Role;
 import com.sct.rest.api.model.filter.CustomerPageableFilter;
 import com.sct.rest.api.repository.CustomerRepository;
@@ -46,10 +47,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto getUserByLogin(String login) {
-        Optional<CustomerEntity> userOptional = customerRepository.findByLogin(login);
-        CustomerEntity customer = userOptional
-                .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), login));
-        return customerMapper.toDto(customer);
+        return customerMapper.toDto(this.getCurrentCustomer(login));
+    }
+
+    @Override
+    public CustomerDto additionalBalance(Long amount) {
+        CustomerEntity customer = this.getCurrentCustomer(SecurityContext.get().getCustomerLogin());
+        customer.setBalance(customer.getBalance() + amount);
+        return this.getCurrent();
+    }
+
+    @Override
+    public void deleteCurrent() {
+        CustomerEntity customer = this.getCurrentCustomer(SecurityContext.get().getCustomerLogin());
+        customer.setStatus(CustomerStatus.NON_ACTIVE);
     }
 
     @Override
@@ -65,5 +76,11 @@ public class CustomerServiceImpl implements CustomerService {
                     c.setTripCount(rentRepository.countRentByCustomerLogin(c.getLogin()));
                     return c;
                 });
+    }
+
+    private CustomerEntity getCurrentCustomer(String login) {
+        Optional<CustomerEntity> userOptional = customerRepository.findByLogin(login);
+        return userOptional
+                .orElseThrow(() -> new ServiceRuntimeException(ErrorCodeEnum.USER_NOT_FOUND, new Throwable(), login));
     }
 }

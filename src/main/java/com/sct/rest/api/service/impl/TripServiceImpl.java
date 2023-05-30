@@ -7,17 +7,11 @@ import com.sct.rest.api.model.dto.PriceDto;
 import com.sct.rest.api.model.dto.RentDto;
 import com.sct.rest.api.model.dto.trip.TripBeginDto;
 import com.sct.rest.api.model.dto.trip.TripEndDto;
-import com.sct.rest.api.model.entity.CustomerEntity;
-import com.sct.rest.api.model.entity.ParkingEntity;
-import com.sct.rest.api.model.entity.RentEntity;
-import com.sct.rest.api.model.entity.TransportEntity;
+import com.sct.rest.api.model.entity.*;
 import com.sct.rest.api.model.enums.RentStatus;
 import com.sct.rest.api.model.enums.TransportStatus;
 import com.sct.rest.api.model.enums.TransportType;
-import com.sct.rest.api.repository.CustomerRepository;
-import com.sct.rest.api.repository.ParkingRepository;
-import com.sct.rest.api.repository.RentRepository;
-import com.sct.rest.api.repository.TransportRepository;
+import com.sct.rest.api.repository.*;
 import com.sct.rest.api.security.SecurityContext;
 import com.sct.rest.api.service.PriceService;
 import com.sct.rest.api.service.TripService;
@@ -38,6 +32,8 @@ public class TripServiceImpl implements TripService {
     private final TransportRepository transportRepository;
 
     private final RentRepository rentRepository;
+
+    private final RoutePointRepository routePointRepository;
 
     private final RentMapper rentMapper;
 
@@ -89,6 +85,7 @@ public class TripServiceImpl implements TripService {
         ParkingEntity parking = this.getParking(tripEnd.getParkingId());
         TransportEntity transport = this.getTransport(tripEnd.getTransportId());
         RentEntity rent = this.getRent(tripEnd.getRentId());
+        RoutePointEntity routePoint = routePointRepository.findFirstByRentIdOrderByCreatedDateDesc(rent.getId());
         PriceDto price = priceService.getActualPrice(transport.getType());
 
         if (rent.getStatus() == RentStatus.CLOSE)
@@ -102,7 +99,7 @@ public class TripServiceImpl implements TripService {
         customer.setBalance(customer.getBalance() - amount);
 
         transport.setParking(parking);
-        transport.setCoordinates(parking.getCoordinates());
+        transport.setCoordinates(routePoint.getLatitude() + "," + routePoint.getLongitude());
         transport.setStatus(TransportStatus.FREE);
 
         rent.setEndTimeRent(endTimeRent);

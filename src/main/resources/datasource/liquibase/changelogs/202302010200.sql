@@ -1,8 +1,9 @@
 --liquibase formatted sql
 
 --changeset dmitry.krivenko:202302010200-1
-INSERT INTO public.customer(id, login, password, balance, role) VALUES
-(1, 'Admin', '1111', 0, 'ADMIN');
+INSERT INTO public.customer(id, login, password, balance, role, status) VALUES
+(1, 'Admin', '1111', 0, 'ADMIN', 'ACTIVE'),
+(2, 'Manager', '1111', 0, 'MANAGER', 'ACTIVE');
 
 --changeset dmitry.krivenko:202302010200-2
 INSERT INTO public.parking(id, name, coordinates, allowed_radius, type, status) VALUES
